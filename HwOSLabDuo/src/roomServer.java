@@ -9,25 +9,24 @@ import java.net.Socket;
 
 public class roomServer {
 	
-	// variable
-	private static int portUser; // Server -> port number
-	private static String space3 = "   "; // 3 times
 	
+	private static int portNum = 0;
 	
 	//Constructor
 	roomServer(int portNum){
-		
+		this.portNum = portNum;
 		// Create thread to take responsibility about roomServer
 		ServerRunnable task = new ServerRunnable(portNum);
-		Thread tmpThread = new Thread(task);
-		tmpThread.start();
+		Thread threadServer = new Thread(task);
+		threadServer.start();
+
 	}
+	
+	
 //The end of roomServer class
 }
 
-
-
-// About multi-thread
+// About thread
 class ServerRunnable implements Runnable{
 	
 	//variable
@@ -37,13 +36,14 @@ class ServerRunnable implements Runnable{
 	Socket socket = new Socket();
 	DataInputStream input = null;
 	DataOutputStream output = null;
+	
 	private static String space3 = "   "; // 3 times 
 	
 
 	//Constructor
 	ServerRunnable(int portNum){
 		this.portUser = portNum;
-		this.stateRoom = true;
+
 
 	}
 	
@@ -51,26 +51,23 @@ class ServerRunnable implements Runnable{
 	public void run() {
 		
 		try {
-			// Open the socket by specific port
+			// 1) Open the socket by specific port
 			System.out.println(space3+"Waiting the player . . . ");
 			server = new ServerSocket(portUser);
 	
-			//----Waiting for client connect
-			socket = server.accept();
-			System.out.println("Open the room");
-			input= new DataInputStream(socket.getInputStream());
-			output = new DataOutputStream(socket.getOutputStream());
+			// 2) Waiting for client connect
+			socket = server.accept(); // connect
+			System.out.println("\tOpen the room");
+			input= new DataInputStream(socket.getInputStream()); // for receiving
+			output = new DataOutputStream(socket.getOutputStream()); // for sending
 			
-			while(stateRoom) {
-				
-				String message = input.readUTF(); // receive the 
-				System.out.println(message);
-				
-				if(message.toLowerCase() == "close") {
-					setStateRoom(false);
-				}
-				
-			}
+
+			// 3) Communicate
+			
+			// test connection
+			String message = input.readUTF(); // receive string
+			System.out.println("\t"+message);
+			// 4) Close
 			socket.close();
 			input.close();
 			output.close();

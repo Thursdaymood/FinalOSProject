@@ -1,54 +1,51 @@
 
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Random;
 import java.util.ArrayList;
+import java.util.Scanner;
+
 
 public class mainArea {
-	private static String space3 = "   "; // 3 times
-	private static int defaultPort = 9999;
+	
+	private static String spaces3 = "   ";
+	private static ArrayList<Integer> ports = new ArrayList<Integer>(5); // Just 4 rooms
+	private static Scanner scan = new Scanner(System.in);
 
 	
 	public static void main(String[] args) {
-		Scanner scan = new Scanner(System.in);
 		
-		// first input from user [JOIN / OPEN]
-		printLine(45);
-		System.out.print(space3+ "Open the room || Join the room: ");
-		String userType = scan.nextLine().toLowerCase();
+		// default port number
+		ports.add(5001);
+		ports.add(5002);
+		ports.add(5003);
+		ports.add(5004);
+		
+		System.out.print("Enter (1 for run roomServer): ");
+		String state = scan.next();
+		
+		System.out.print("Enter ip address: ");
+		String tmp = scan.next();
 
-		while (!(userType.equals("open") || userType.equals("join"))) {
+		
+		if(state.equals("1")){
+			createRoom(ports.get(0));
 			
-			System.out.println(space3+"Please enter just \"open\" or \"join\" ");
-			System.out.print(space3+"Open the room || Join the room: ");
-			userType = scan.nextLine().toLowerCase();
+		}else{
+			joinRoom(ports.get(0), tmp);
 		}
 		
-		//If user open the room
-		if(userType.equals("open")){
-			//Server
-			createRoom();
-			
-			// TODO: Setting room
-
-		}else if(userType.equals("join")){
-			// Client
-			System.out.println("Hello");
-		}
-		
-
 	}
 
 	// Create room method
-	private static void createRoom() {
-		
-		System.out.println("\n"+space3+"Detail room");
-		System.out.println(space3+"Id room: "+defaultPort);
-		roomServer room = new roomServer(defaultPort);
-
+	private static void createRoom(int port) {
+		printLine(20);
+		System.out.println("\tCreate room");
+		roomServer room = new roomServer(port);
 	}
 
+	private static void joinRoom(int port, String ip) {
+		printLine(20);
+		System.out.println("\tJoin room");
+		client user = new client(port,ip);
+	}
 	private static void printLine(int num) {
 		for (int i = 0; i < num; i++) {
 			System.out.print("-");
