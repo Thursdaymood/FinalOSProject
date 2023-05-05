@@ -79,7 +79,7 @@ class ServerRunnable implements Runnable{
 	
 	}
 	
-	//set method
+	//set method room
 	public void setPortRoom(int user) {
 		this.portUser = user;
 	}
