@@ -17,20 +17,13 @@ public class mainArea {
 		ports.add(5002);
 		ports.add(5003);
 		ports.add(5004);
+		//------------------------
+		// create room
+		createRoom(ports.get(0));
 		
-		System.out.print("Enter (1 for run roomServer): ");
-		String state = scan.next();
 		
-		System.out.print("Enter ip address: ");
-		String tmp = scan.next();
-
-		
-		if(state.equals("1")){
-			createRoom(ports.get(0));
-			
-		}else{
-			joinRoom(ports.get(0), tmp);
-		}
+		// navigate page
+		// GUI java
 		
 	}
 

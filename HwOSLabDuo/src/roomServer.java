@@ -94,7 +94,7 @@ class ServerRunnable implements Runnable{
 			// 1) Open the socket by specific port
 			System.out.println(space3+"Waiting the player . . . ");
 			server = new ServerSocket(portUser);
-	
+			
 			// 2) Waiting for client connect
 			socket = server.accept(); // connect
 			System.out.println("\tOpen the room");
@@ -103,10 +103,21 @@ class ServerRunnable implements Runnable{
 			
 
 			// 3) Communicate
+<<<<<<< Updated upstream
 			
 			// roomServer connection
 			String message = input.readUTF(); // receive string
 			System.out.println("\t"+message);
+=======
+			String message = "";
+			// test connection
+			while(!message.toLowerCase().equals("close")) {
+				
+				message = input.readUTF();
+				System.out.println("\t"+message);
+			}
+			
+>>>>>>> Stashed changes
 			// 4) Close
 			socket.close();
 			input.close();
