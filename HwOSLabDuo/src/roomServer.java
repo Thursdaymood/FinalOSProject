@@ -11,6 +11,11 @@ public class roomServer {
 	
 	
 	private static int portNum = 0;
+
+	//variable
+	static int score;
+    static int life = 3;
+	static String[] word_random ;
 	
 	//Constructor
 	roomServer(int portNum){
@@ -21,7 +26,42 @@ public class roomServer {
 		threadServer.start();
 
 	}
-	
+
+	//check letter
+	public static int getLife() {
+        return life;
+    }
+
+    public static void damageLife() {
+        life -= 1;
+    }
+
+    public static int getScore() {
+        return score;
+    }
+
+    public static void upScore() {
+        score +=1;
+    }
+    
+    public static void checkLetter(int turn, String letterUser) {
+
+        String word = word_random[turn];
+
+        if (word.contains(letterUser)){
+            int count = 0;
+            for(int i = 0; i < word.length(); i++) 
+            {
+                if(word.charAt(i) == letterUser.charAt(0)) {
+                    upScore();
+                }
+            }
+        }
+
+        else{
+            roomServer.damageLife();
+        }
+    }
 	
 //The end of roomServer class
 }
@@ -64,7 +104,7 @@ class ServerRunnable implements Runnable{
 
 			// 3) Communicate
 			
-			// test connection
+			// roomServer connection
 			String message = input.readUTF(); // receive string
 			System.out.println("\t"+message);
 			// 4) Close
