@@ -10,16 +10,17 @@ import java.net.Socket;
 public class roomServer {
 	
 	// variable
-	private static int portUser;
-	private static boolean stateRoom;
+	private static int portUser; // Server -> port number
+	private static String space3 = "   "; // 3 times
 	
 	
 	//Constructor
 	roomServer(int portNum){
 		
 		// Create thread to take responsibility about roomServer
-		mainRunnable task = new mainRunnable(portNum);
+		ServerRunnable task = new ServerRunnable(portNum);
 		Thread tmpThread = new Thread(task);
+		tmpThread.start();
 	}
 //The end of roomServer class
 }
@@ -27,7 +28,7 @@ public class roomServer {
 
 
 // About multi-thread
-class mainRunnable implements Runnable{
+class ServerRunnable implements Runnable{
 	
 	//variable
 	private static boolean stateRoom;
@@ -36,10 +37,11 @@ class mainRunnable implements Runnable{
 	Socket socket = new Socket();
 	DataInputStream input = null;
 	DataOutputStream output = null;
+	private static String space3 = "   "; // 3 times 
 	
 
 	//Constructor
-	mainRunnable(int portNum){
+	ServerRunnable(int portNum){
 		this.portUser = portNum;
 		this.stateRoom = true;
 
@@ -49,18 +51,19 @@ class mainRunnable implements Runnable{
 	public void run() {
 		
 		try {
-			System.out.println("Waiting the player");
 			// Open the socket by specific port
-			printLine(20);
+			System.out.println(space3+"Waiting the player . . . ");
 			server = new ServerSocket(portUser);
-			System.out.println("Open the room");
+	
+			//----Waiting for client connect
 			socket = server.accept();
+			System.out.println("Open the room");
 			input= new DataInputStream(socket.getInputStream());
 			output = new DataOutputStream(socket.getOutputStream());
 			
 			while(stateRoom) {
 				
-				String message = input.readUTF();
+				String message = input.readUTF(); // receive the 
 				System.out.println(message);
 				
 				if(message.toLowerCase() == "close") {
