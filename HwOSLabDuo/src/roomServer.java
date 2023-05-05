@@ -103,13 +103,13 @@ class ServerRunnable implements Runnable{
 			
 
 			// 3) Communicate
-<<<<<<< Updated upstream
+
 			
 			// roomServer connection
 			String message = input.readUTF(); // receive string
 			System.out.println("\t"+message);
-=======
-			String message = "";
+
+			message = "";
 			// test connection
 			while(!message.toLowerCase().equals("close")) {
 				
@@ -117,7 +117,7 @@ class ServerRunnable implements Runnable{
 				System.out.println("\t"+message);
 			}
 			
->>>>>>> Stashed changes
+
 			// 4) Close
 			socket.close();
 			input.close();
