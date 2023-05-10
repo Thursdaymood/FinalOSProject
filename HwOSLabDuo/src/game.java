@@ -2,8 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class game extends JFrame {
-    private static final int WIDTH = 900;
-    private static final int HEIGHT = 700;
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 500;
     static final int margin = 15;
     static final int size_heart = 30;
     static Color white = Color.WHITE;
@@ -42,7 +42,7 @@ public class game extends JFrame {
         //heart
         int pos_x = margin;
         for (int i = 0; i < 3; i++) {
-            ImageIcon image = new ImageIcon("HwOSLabDuo/src/heart.png");
+            ImageIcon image = new ImageIcon("resc/heart.png");
             Image smallImage = image.getImage().getScaledInstance(size_heart, size_heart, Image.SCALE_SMOOTH);
             ImageIcon smallIcon = new ImageIcon(smallImage);
             JLabel heart = new JLabel(smallIcon);
