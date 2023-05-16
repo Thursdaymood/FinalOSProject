@@ -9,14 +9,12 @@ import java.util.Scanner;
 
 public class client {
 	
-	public static int port = 0;
-	public static String ipUser = "";
+	public static int port = 5001;
+	public static String ipUser = "127.0.0.1";
 	
 	// Constructor
-	client(int port, String ipUser){
-		this.port = port;
-		this.ipUser = ipUser ;
-		
+	client(){
+
 		//Create thread to take responsibility about client
 		ClientRunnable task = new ClientRunnable(ipUser, port);
 		Thread threadClient = new Thread(task);
@@ -63,9 +61,6 @@ class ClientRunnable implements Runnable {
 			// 3) Close
 			output.close();
 			socket.close();
-			
-			
-
 			
 			
 		}catch(Exception error) {
