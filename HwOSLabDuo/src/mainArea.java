@@ -1,26 +1,16 @@
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.border.Border;
+
 
 public class mainArea {
 
@@ -28,7 +18,7 @@ public class mainArea {
 		
 		System.out.println("Start game ...");
 		printLine(20);
-		introFrame frameStart = new introFrame();
+		introFrame frameStart = new introFrame(1);
 
 	}
 	private static void printLine(int num) {
@@ -41,18 +31,23 @@ public class mainArea {
 }
 
 class introFrame {
-	private static final int WIDTH = 800;
-	private static final int HEIGHT = 250;
+
 	// Picture
 	private ImageIcon imageIcon = new ImageIcon("resc//idea.png");
 	private ImageIcon bg = new ImageIcon("resc//pixelSky.gif");
 	
 	// Structure
 	private JFrame frame;
-	private JLabel labelMain;	
+	private JLabel labelMain;
+	private static final int WIDTH = 800;
+	private static final int HEIGHT = 250;
+	private client player1;
+	private client player2;
+	private int num = 0;
 	
 	// Constructor
-	introFrame() {
+	public introFrame(int numUser) {
+		this.num = numUser;
 		// Default setup
 		labelMain = new JLabel(bg);
 		labelMain.setSize(WIDTH, HEIGHT);
@@ -70,8 +65,11 @@ class introFrame {
 
 		startPage();
 	}
-
+	
+	// -----------------------GUI/first page----------------------------
 	private void startPage() {
+		
+		int[] ports = {2221,2222,2223,2224};
 		// buttons
 		JButton btn1 = new JButton("Room 1");
 		JButton btn2 = new JButton("Room 2");
@@ -100,32 +98,69 @@ class introFrame {
 		btn1.addActionListener((ActionListener) new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("User enter room1");
-				createRoom();
+				if(num == 1) {
+					createRoom(ports[0]);
+					player1 = new client(1, ports[0]);
+				}
+				if(num ==2){
+					joinRoom(ports[0]);
+					player2 = new client(2, ports[0]);
+				}
+
+				frame.setVisible(false);
 			}
 
 		});
 
 		btn2.addActionListener((ActionListener) new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Hello 2");
+				System.out.println("User enter room2");
+				if(num == 1) {
+					createRoom(ports[1]);
+					player1 = new client(1, ports[1]);
+				}
+				if(num ==2) {
+					joinRoom(ports[1]);
+					player2 = new client(2, ports[1]);
+				}
+
+				frame.setVisible(false);
 			}
 
 		});
 
 		btn3.addActionListener((ActionListener) new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Hello 3");
+				System.out.println("User enter room3");
+				if(num == 1){
+					createRoom(ports[2]);
+					player1 = new client(1, ports[2]);
+					
+				}if(num ==2) {
+					joinRoom(ports[2]);
+					player2 = new client(2, ports[2]);
+				}
+
+				frame.setVisible(false);
 			}
 
 		});
 
 		btn4.addActionListener((ActionListener) new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Hello 4");
+				System.out.println("User enter room4");
+				frame.setVisible(false);
+				if(num == 1){
+					createRoom(ports[3]);
+					player1 = new client(1,ports[3]);
+				}if(num == 2){
+					joinRoom(ports[3]);
+					player2 = new client(2, ports[3]);
+				}
 			}
 		});
 
-		// ----------------------------------------------
+
 		// Game's name
 		JLabel name = new JLabel("// NAME //");
 		name.setOpaque(false);
@@ -134,7 +169,8 @@ class introFrame {
 		name.setBounds((WIDTH / 2) - 50, (HEIGHT / 10) - 5, WIDTH, 50);
 		labelMain.add(name);
 	}
-
+	
+	// ----------------------------------------------
 	private Font getExternalFont20(String path) {
 		Font customFont = null;
 		
@@ -149,18 +185,20 @@ class introFrame {
 	}
 	
 	// Create room method
-	private static void createRoom() {
+	private static void createRoom(int port){
 		printLine(20);
 		System.out.println("\tCreate room");
-		roomServer room = new roomServer();
+		roomServer room = new roomServer(port);
+
 	}
 
-	private static void joinRoom() {
+	// Join room
+	private static void joinRoom(int port) {
 		printLine(20);
-		System.out.println("\tJoin room");
-		client user = new client();
-	}
+		System.out.println("\tJoin room ...");
+		client player2 = new client(2,port);
 
+	}
 	private static void printLine(int num) {
 		for (int i = 0; i < num; i++) {
 			System.out.print("-");
@@ -169,7 +207,4 @@ class introFrame {
 
 	}
 	
-	
-
 }
-
