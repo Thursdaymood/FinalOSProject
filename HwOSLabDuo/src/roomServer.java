@@ -14,10 +14,6 @@ import java.util.Scanner;
 
 
 public class roomServer {
-	// variable in game
-	static int score;
-	static int life = 3;
-	static ArrayList<String> word_random = new ArrayList<String>(5);
 	private static int numPlayer = 1;
 	
 	// Network
@@ -34,12 +30,13 @@ public class roomServer {
 		System.out.println("\tWaiting the player . . . ");
 		
 		try {
-			server = new ServerSocket(port);
+			
 			
 			while(numPlayer != 4){
 				// Create thread to take responsibility about roomServer
 				
 				if(numPlayer == 1){
+					server = new ServerSocket(port);
 					socket = server.accept(); // Waiting for clients connecting
 					task1 = new ServerRunnable(socket);
 					threadServer1 = new Thread(task1);
@@ -47,6 +44,7 @@ public class roomServer {
 					numPlayer+=1;
 				}
 				if(numPlayer == 2){
+					server = new ServerSocket(port);
 					socket = server.accept();
 					task2 = new ServerRunnable(socket);
 					threadServer2 = new Thread(task2);
@@ -65,25 +63,54 @@ public class roomServer {
 		}
 	}
 
-	// check letter
-	public static void checkLetter(int turn, String letterUser) {
 
-		String word = word_random.get(turn);
 
-		if (word.contains(letterUser)) {
-			int count = 0;
-			for (int i = 0; i < word.length(); i++) {
-				if (word.charAt(i) == letterUser.charAt(0)) {
-					upScore();
-				}
-			}
-		}
+	// The end of roomServer class
+}
 
-		else {
-			roomServer.damageLife();
-		}
+// About thread
+class ServerRunnable implements Runnable {
+	// variable in game
+	static int score;
+	static int life = 3;
+	static ArrayList<String> word_random = new ArrayList<String>(5);
+
+
+	// variable
+	private static boolean stateRoom = true;
+	Socket soc;
+
+	DataInputStream input = null;
+	DataOutputStream output = null;
+
+
+	// Constructor
+	ServerRunnable(Socket socket) {
+		this.soc = socket;
 	}
 
+	@Override // Run method
+	public void run() {
+		try {
+			input = new DataInputStream(soc.getInputStream()); // for receiving
+			output = new DataOutputStream(soc.getOutputStream()); // for sending
+			
+			while(true){
+				// get words to play
+				randomWords();
+				for(int i = 0 ; i < word_random.size() ; i++ ){
+					output.writeUTF(word_random.get(i));
+					System.out.println(word_random.get(i));
+				}
+		
+				break;
+			}
+		} catch (Exception error) {
+			System.out.println(error);
+		}
+		System.out.println("Finish");
+
+	}
 	public static int getLife() {
 		return life;
 	}
@@ -100,10 +127,31 @@ public class roomServer {
 		score += 1;
 	}
 
+	
+	// check letter
+	public static void checkLetter(int turn, String letterUser) {
+
+		String word = word_random.get(turn);
+
+		if (word.contains(letterUser)) {
+			int count = 0;
+			for (int i = 0; i < word.length(); i++) {
+				if (word.charAt(i) == letterUser.charAt(0)) {
+					upScore();
+				}
+			}
+		}
+
+		else {
+			//roomServer.damageLife();
+		}
+	}
+
+
 	// Random word in gameFile and insert it in woed_random
 	public static void randomWords() {
 		Random ran = new Random();
-		File file = new File("resc//miniVocab.txt");
+		File file = new File("D:\\$\\Programming\\XProject\\FinalOSProject\\HwOSLabDuo\\resc\\miniVocab.txt");
 		int tmpNum = ran.nextInt(834) + 1;
 		String line;
 		Scanner scan;
@@ -132,60 +180,5 @@ public class roomServer {
 
 	}
 
-	private Font getExternalFont14(String path) {
-		Font customFont = null;
 
-		try {
-			customFont = Font.createFont(Font.TRUETYPE_FONT, new File(path)).deriveFont(14f); // change size
-		} catch (IOException | FontFormatException e) {
-			e.printStackTrace();
-		}
-
-		return customFont;
-
-	}
-
-	// The end of roomServer class
-}
-
-// About thread
-class ServerRunnable implements Runnable {
-
-	// variable
-	private static boolean stateRoom = true;
-	Socket soc;
-
-	DataInputStream input = null;
-	DataOutputStream output = null;
-
-
-	// Constructor
-	ServerRunnable(Socket socket) {
-		this.soc = socket;
-	}
-
-	@Override // Run method
-	public void run() {
-		try {
-			input = new DataInputStream(soc.getInputStream()); // for receiving
-			output = new DataOutputStream(soc.getOutputStream()); // for sending
-			while(true){
-				// Communicate
-				String message = input.readUTF();
-				
-				
-				if(message.toLowerCase().equals("close")){
-					// Close
-					soc.close();
-					input.close();
-					output.close();
-					break;
-				}
-				output.writeUTF(message);
-			}
-		} catch (Exception error) {
-			System.out.println(error);
-		}
-
-	}
 }

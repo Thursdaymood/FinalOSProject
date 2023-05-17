@@ -9,21 +9,23 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 public class client {
-
+	
+	int[][] ports = { { 2221, 2222 }, { 2223, 2224 }, { 2225, 2226 }, { 2227, 2228 } };
 	// Constructor
-	public client(int player, int port) {
+	public client(int player, int room) {
+		
 		// Create thread to take responsibility about client
-		if (player == 1 && port != 0) {
-			player1Runnable task1 = new player1Runnable(port);
+		if (player == 1 && room != -1){
+			player1Runnable task1 = new player1Runnable(ports[room-1][0]);
 			Thread player1 = new Thread(task1);
 			player1.start();
 		}
-		if (player == 2 && port != 0) {
-			player2Runnable task2 = new player2Runnable(port);
+		if (player == 2 && room != -1) {
+			player2Runnable task2 = new player2Runnable(ports[room-1][1]);
 			Thread player2 = new Thread(task2);
 			player2.start();
 		}
-		if (player == 2 && port == 0) {
+		if (player == 2 && room == -1) {
 			introFrame guiplayer2 = new introFrame(2);
 		}
 
@@ -32,7 +34,7 @@ public class client {
 	public static void main(String[] args) {
 		System.out.println("Start game ...");
 		printLine(20);
-		client player2 = new client(2, 0);
+		client player2 = new client(2, -1);
 
 	}
 
@@ -78,7 +80,7 @@ class player1Runnable implements Runnable {
 	Socket socket = null;
 	DataInputStream input = null;
 	DataOutputStream output = null;
-	private static int port = 0;
+	private int port = 0;
 	boolean stateRoom = false;
 	
 	private static Scanner scan = new Scanner(System.in);
@@ -93,26 +95,24 @@ class player1Runnable implements Runnable {
 	public void run() {
 
 		try {
-			System.out.println("\tPlayer1 is ready ...");
-			// 1) Connect the server in the same socket by choosing ip of server and port
+
+			// Connect the server in the same socket by choosing ip of server and port
 			// number
 			InetAddress localHost = InetAddress.getLocalHost();
 			String ipAddress = localHost.getHostAddress();
+			
 			socket = new Socket(ipAddress, port);
 			input = new DataInputStream(socket.getInputStream());
 			output = new DataOutputStream(socket.getOutputStream());
 			String message;
-			// 2) Communicate
+			String revmes;
+			System.out.println("\tPlayer1 is ready ...");
+			// Communicate
 			while (!stateRoom) {
-
 				message = scan.nextLine();
-				output.writeUTF("\t" + message);
-				String tmp = input.readUTF();
-				System.out.println(tmp);
-
-				if (message.toLowerCase().equals("close")) {
-					closeRoom();
-				}
+				output.writeUTF(message);
+				revmes = input.readUTF();
+				System.out.println(revmes);
 			}
 
 			// Close
@@ -123,7 +123,7 @@ class player1Runnable implements Runnable {
 
 
 		} catch (Exception error) {
-			System.out.println(error);
+			// System.out.println(error);
 		}
 
 	}
@@ -140,16 +140,6 @@ class player2Runnable implements Runnable {
 	boolean stateRoom = false;
 	private int port = 0;
 
-	// Picture
-	private ImageIcon imageIcon = new ImageIcon("resc//idea.png");
-	private ImageIcon bg = new ImageIcon("resc//pixelSky.gif");
-
-	// Structure
-	private JFrame frame;
-	private JLabel labelMain;
-	private static final int WIDTH = 800;
-	private static final int HEIGHT = 250;
-
 	Scanner scan = new Scanner(System.in);
 
 	// Constructor
@@ -161,31 +151,26 @@ class player2Runnable implements Runnable {
 	@Override
 	public void run() {
 		try {
-			System.out.println("\tPlayer2 is ready ...");
 			InetAddress localHost = InetAddress.getLocalHost();
 			String ipAddress = localHost.getHostAddress();
 			socket = new Socket(ipAddress, port);
 			input = new DataInputStream(socket.getInputStream());
 			output = new DataOutputStream(socket.getOutputStream());
+			// Communicate			
 			String message;
+			String revmes;
+			System.out.println("\tPlayer2 is ready ...");
 			while (!stateRoom) {
-
 				message = scan.nextLine();
-				output.writeUTF("\t" + message);
-				String tmp = input.readUTF();
-				System.out.println(tmp);
-				
-
-				if (message.toLowerCase().equals("close")) {
-					closeRoom();
-				}
+				output.writeUTF(message);
+				revmes = input.readUTF();
+				System.out.println(revmes);
 			}
-
 			socket.close();
 			input.close();
 			output.close();
 
-		} catch (Exception error) {
+		}catch (Exception error) {
 			System.out.println(error);
 		}
 

@@ -17,15 +17,22 @@ public class mainArea {
 	public static void main(String[] args) throws FontFormatException, IOException {
 		
 		System.out.println("Start game ...");
-		printLine(20);
 		introFrame frameStart = new introFrame(1);
+		server room1 = new server(1,1);
+		server room2 = new server(2,1);
+		server room3 = new server(3,1);
+		server room4 = new server(4,1);
 
-	}
-	private static void printLine(int num) {
-		for (int i = 0; i < num; i++) {
-			System.out.print("-");
-		}
-		System.out.println();
+		Thread thread1 = new Thread(room1);
+		Thread thread2 = new Thread(room2);
+		Thread thread3 = new Thread(room3);
+		Thread thread4 = new Thread(room4);
+
+		thread1.start();
+		thread2.start();
+		thread3.start();
+		thread4.start();
+		System.out.println("All servers are created...");
 
 	}
 }
@@ -69,7 +76,6 @@ class introFrame {
 	// -----------------------GUI/first page----------------------------
 	private void startPage() {
 		
-		int[] ports = {2221,2222,2223,2224};
 		// buttons
 		JButton btn1 = new JButton("Room 1");
 		JButton btn2 = new JButton("Room 2");
@@ -97,14 +103,13 @@ class introFrame {
 		// function btn
 		btn1.addActionListener((ActionListener) new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				printLine(20);
 				System.out.println("User enter room1");
 				if(num == 1) {
-					createRoom(ports[0]);
-					player1 = new client(1, ports[0]);
+					player1 = new client(1, 1);
 				}
 				if(num ==2){
-					joinRoom(ports[0]);
-					player2 = new client(2, ports[0]);
+					joinRoom(1);
 				}
 
 				frame.setVisible(false);
@@ -114,14 +119,13 @@ class introFrame {
 
 		btn2.addActionListener((ActionListener) new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				printLine(20);
 				System.out.println("User enter room2");
 				if(num == 1) {
-					createRoom(ports[1]);
-					player1 = new client(1, ports[1]);
+					player1 = new client(1, 2);
 				}
 				if(num ==2) {
-					joinRoom(ports[1]);
-					player2 = new client(2, ports[1]);
+					joinRoom(2);
 				}
 
 				frame.setVisible(false);
@@ -131,14 +135,13 @@ class introFrame {
 
 		btn3.addActionListener((ActionListener) new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				printLine(20);
 				System.out.println("User enter room3");
 				if(num == 1){
-					createRoom(ports[2]);
-					player1 = new client(1, ports[2]);
+					player1 = new client(1, 3);
 					
 				}if(num ==2) {
-					joinRoom(ports[2]);
-					player2 = new client(2, ports[2]);
+					joinRoom(3);
 				}
 
 				frame.setVisible(false);
@@ -148,14 +151,14 @@ class introFrame {
 
 		btn4.addActionListener((ActionListener) new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				printLine(20);
 				System.out.println("User enter room4");
 				frame.setVisible(false);
 				if(num == 1){
-					createRoom(ports[3]);
-					player1 = new client(1,ports[3]);
+					System.out.println("\tCreate room ...");
+					player1 = new client(1,4);
 				}if(num == 2){
-					joinRoom(ports[3]);
-					player2 = new client(2, ports[3]);
+					joinRoom(4);
 				}
 			}
 		});
@@ -184,19 +187,11 @@ class introFrame {
 
 	}
 	
-	// Create room method
-	private static void createRoom(int port){
-		printLine(20);
-		System.out.println("\tCreate room");
-		roomServer room = new roomServer(port);
-
-	}
-
 	// Join room
-	private static void joinRoom(int port) {
+	private static void joinRoom(int room) {
 		printLine(20);
 		System.out.println("\tJoin room ...");
-		client player2 = new client(2,port);
+		client player2 = new client(2,room);
 
 	}
 	private static void printLine(int num) {
