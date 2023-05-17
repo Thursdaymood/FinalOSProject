@@ -65,8 +65,11 @@ class introFrame {
 
 		startPage();
 	}
-
+	
+	// -----------------------GUI/first page----------------------------
 	private void startPage() {
+		
+		int[] ports = {2221,2222,2223,2224};
 		// buttons
 		JButton btn1 = new JButton("Room 1");
 		JButton btn2 = new JButton("Room 2");
@@ -96,12 +99,12 @@ class introFrame {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("User enter room1");
 				if(num == 1) {
-					createRoom(5011);
-					player1 = new client(1, 5011);
+					createRoom(ports[0]);
+					player1 = new client(1, ports[0]);
 				}
 				if(num ==2){
-					joinRoom(5011);
-					player2 = new client(2, 5011);
+					joinRoom(ports[0]);
+					player2 = new client(2, ports[0]);
 				}
 
 				frame.setVisible(false);
@@ -113,12 +116,12 @@ class introFrame {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("User enter room2");
 				if(num == 1) {
-					createRoom(5022);
-					player1 = new client(1, 5022);
+					createRoom(ports[1]);
+					player1 = new client(1, ports[1]);
 				}
 				if(num ==2) {
-					joinRoom(5022);
-					player2 = new client(2, 5022);
+					joinRoom(ports[1]);
+					player2 = new client(2, ports[1]);
 				}
 
 				frame.setVisible(false);
@@ -130,12 +133,12 @@ class introFrame {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("User enter room3");
 				if(num == 1){
-					createRoom(5033);
-					player1 = new client(1, 5033);
+					createRoom(ports[2]);
+					player1 = new client(1, ports[2]);
 					
 				}if(num ==2) {
-					joinRoom(5033);
-					player2 = new client(2, 5033);
+					joinRoom(ports[2]);
+					player2 = new client(2, ports[2]);
 				}
 
 				frame.setVisible(false);
@@ -146,18 +149,18 @@ class introFrame {
 		btn4.addActionListener((ActionListener) new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("User enter room4");
-				if(num == 1){
-					createRoom(5044);
-					player1 = new client(1,5044);
-				}if(num == 2){
-					joinRoom(5044);
-					player2 = new client(2, 5044);
-				}
 				frame.setVisible(false);
+				if(num == 1){
+					createRoom(ports[3]);
+					player1 = new client(1,ports[3]);
+				}if(num == 2){
+					joinRoom(ports[3]);
+					player2 = new client(2, ports[3]);
+				}
 			}
 		});
 
-		// ----------------------------------------------
+
 		// Game's name
 		JLabel name = new JLabel("// NAME //");
 		name.setOpaque(false);
@@ -166,7 +169,8 @@ class introFrame {
 		name.setBounds((WIDTH / 2) - 50, (HEIGHT / 10) - 5, WIDTH, 50);
 		labelMain.add(name);
 	}
-
+	
+	// ----------------------------------------------
 	private Font getExternalFont20(String path) {
 		Font customFont = null;
 		

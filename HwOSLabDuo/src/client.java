@@ -7,6 +7,7 @@ import java.util.Scanner;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+
 public class client {
 
 	// Constructor
@@ -17,22 +18,21 @@ public class client {
 			Thread player1 = new Thread(task1);
 			player1.start();
 		}
-		if (player == 2 && port !=0 ) {
+		if (player == 2 && port != 0) {
 			player2Runnable task2 = new player2Runnable(port);
 			Thread player2 = new Thread(task2);
 			player2.start();
 		}
-		if(player == 2 && port == 0){
+		if (player == 2 && port == 0) {
 			introFrame guiplayer2 = new introFrame(2);
 		}
 
 	}
 
-
 	public static void main(String[] args) {
 		System.out.println("Start game ...");
 		printLine(20);
-		client player2 = new client(2,0);
+		client player2 = new client(2, 0);
 
 	}
 
@@ -47,7 +47,7 @@ public class client {
 // The the end of client class	
 }
 
-class playFrame{
+class playFrame {
 
 	// Picture
 	private ImageIcon imageIcon = new ImageIcon("resc//idea.png");
@@ -74,13 +74,14 @@ class playFrame{
 // About thread
 class player1Runnable implements Runnable {
 
-	// Variables
-	private static int port = 0;
-	private static Scanner scan = new Scanner(System.in);
-	// variable network
+	// network
 	Socket socket = null;
 	DataInputStream input = null;
 	DataOutputStream output = null;
+	private static int port = 0;
+	boolean stateRoom = false;
+	
+	private static Scanner scan = new Scanner(System.in);
 
 	// Constructor
 	player1Runnable(int portUser) {
@@ -98,21 +99,36 @@ class player1Runnable implements Runnable {
 			InetAddress localHost = InetAddress.getLocalHost();
 			String ipAddress = localHost.getHostAddress();
 			socket = new Socket(ipAddress, port);
+			input = new DataInputStream(socket.getInputStream());
 			output = new DataOutputStream(socket.getOutputStream());
-
+			String message;
 			// 2) Communicate
+			while (!stateRoom) {
 
-			// test connection
-			output.writeUTF("\tHello!");
+				message = scan.nextLine();
+				output.writeUTF("\t" + message);
+				String tmp = input.readUTF();
+				System.out.println(tmp);
 
-			// 3) Close
-			output.close();
+				if (message.toLowerCase().equals("close")) {
+					closeRoom();
+				}
+			}
+
+			// Close
 			socket.close();
+			input.close();
+			output.close();
+
+
 
 		} catch (Exception error) {
 			System.out.println(error);
 		}
 
+	}
+	private void closeRoom() {
+		this.stateRoom = true;
 	}
 }
 
@@ -121,7 +137,9 @@ class player2Runnable implements Runnable {
 	Socket socket = null;
 	DataInputStream input = null;
 	DataOutputStream output = null;
-	
+	boolean stateRoom = false;
+	private int port = 0;
+
 	// Picture
 	private ImageIcon imageIcon = new ImageIcon("resc//idea.png");
 	private ImageIcon bg = new ImageIcon("resc//pixelSky.gif");
@@ -132,14 +150,12 @@ class player2Runnable implements Runnable {
 	private static final int WIDTH = 800;
 	private static final int HEIGHT = 250;
 
-	
-	// Network
-	private int port = 0;
+	Scanner scan = new Scanner(System.in);
 
 	// Constructor
 	public player2Runnable(int port) {
 		this.port = port;
-		
+
 	}
 
 	@Override
@@ -149,21 +165,34 @@ class player2Runnable implements Runnable {
 			InetAddress localHost = InetAddress.getLocalHost();
 			String ipAddress = localHost.getHostAddress();
 			socket = new Socket(ipAddress, port);
+			input = new DataInputStream(socket.getInputStream());
 			output = new DataOutputStream(socket.getOutputStream());
-			
-			output.writeUTF("\tHello!!");
+			String message;
+			while (!stateRoom) {
 
+				message = scan.nextLine();
+				output.writeUTF("\t" + message);
+				String tmp = input.readUTF();
+				System.out.println(tmp);
+				
 
-			output.close();
+				if (message.toLowerCase().equals("close")) {
+					closeRoom();
+				}
+			}
+
 			socket.close();
-			
-		}catch(Exception error) {
+			input.close();
+			output.close();
+
+		} catch (Exception error) {
 			System.out.println(error);
 		}
 
-
 	}
 
-
+	private void closeRoom() {
+		this.stateRoom = true;
+	}
 
 }

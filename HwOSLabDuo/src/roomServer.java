@@ -172,7 +172,7 @@ class ServerRunnable implements Runnable {
 			while(true){
 				// Communicate
 				String message = input.readUTF();
-				System.out.println(message);
+				
 				
 				if(message.toLowerCase().equals("close")){
 					// Close
@@ -181,6 +181,7 @@ class ServerRunnable implements Runnable {
 					output.close();
 					break;
 				}
+				output.writeUTF(message);
 			}
 		} catch (Exception error) {
 			System.out.println(error);
