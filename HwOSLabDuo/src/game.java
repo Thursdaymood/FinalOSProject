@@ -7,6 +7,16 @@ import java.util.ArrayList;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
+/*
+ * play1,2 จะมารวมกัน
+ * เชื่อข้อมูล wordChallenge
+ * ลดหัวใจ
+ * เปลี่ยนhidden
+ * ผลแพ้ชนะ
+ * ใครwin
+ * เปลี่ยนround
+ */
+
 public class game extends JFrame implements ActionListener {
 
     //store wordChallenge exmport form roomserver
@@ -18,7 +28,8 @@ public class game extends JFrame implements ActionListener {
                 lifeOfPlayer1 = 3 , 
                 lifeOfPlayer2 = 3 ,
                 scorePlayer1 = 0,
-                scorePlayer2 = 0;    
+                scorePlayer2 = 0,
+                count=0; 
     private JLabel hiddeWordsLabel,play1,play2,roundLabel,displayScore1,displayScore2,turnLabel;
 
     private int round = 1, turn = 1;
@@ -149,6 +160,35 @@ public class game extends JFrame implements ActionListener {
         repaint();
     }
 
+    private void displayRound(){
+
+        if(turnLabel != null) {
+            getContentPane().remove(roundLabel);
+        }
+        roundLabel = new JLabel("Round: "+ round + " / 5");
+        roundLabel.setForeground(TEXT_COLOR);
+        roundLabel.setBounds(WIDTH - 150, 30, 150, 30);
+        roundLabel.setFont(customFont.deriveFont(20f));
+        getContentPane().add(roundLabel);    
+        
+        revalidate();
+        repaint();
+    }
+
+    public void updateHiddenwords(String letter) {
+        for (int i = 0; i < word.length(); i++) {
+            if (word.charAt(i) ==  letter.charAt(0)) {
+                getContentPane().remove(hiddeWordsLabel);
+
+            hiddeWordsLabel = new JLabel(hiddeWords(word));
+            hiddeWordsLabel.setFont(customFont.deriveFont(60f));
+            hiddeWordsLabel.setForeground(TEXT_COLOR);
+            hiddeWordsLabel.setBounds(WIDTH/2-hiddeWordsLabel.getWidth()/2,(HEIGHT-160)/2,WIDTH-190,100);
+            }
+            
+        }
+        
+    }
     public void createroom(){
         setTitle("Hangman Game Room"+roomId);
         setSize(WIDTH, HEIGHT);
@@ -165,12 +205,12 @@ public class game extends JFrame implements ActionListener {
         letterButtons = new JButton[26];
         customFont = createFont("HwOSLabDuo/resc/Raleway-SemiBold.ttf");
         word = wordChallenge[round];
-        //wordChallenge = server.word_random();
 
+        //wordChallenge = server.word_random();
         //สร้างloop
         createroom();
         addGuiComponents();
-        ++ round ;
+        
     }
     private void addGuiComponents(){
 
@@ -191,15 +231,7 @@ public class game extends JFrame implements ActionListener {
 
 
         /******************      DISKPLAY GAME       ******************/
-        roundLabel = new JLabel("Round: "+ (round+1) + " / 5");
-        roundLabel.setForeground(TEXT_COLOR);
-        roundLabel.setBounds(WIDTH - 150, 30, 150, 30);
-        roundLabel.setFont(customFont.deriveFont(20f));
-
-        // turnLabel = new JLabel("TURN: PLAYER "+ turn);
-        // turnLabel.setForeground(TEXT_COLOR);
-        // turnLabel.setBounds(WIDTH/2-70, 30, 200, 30);
-        // turnLabel.setFont(customFont.deriveFont(20f));
+        displayRound();
         diskplayTurn();
         
 
@@ -208,7 +240,6 @@ public class game extends JFrame implements ActionListener {
         hiddeWordsLabel.setFont(customFont.deriveFont(60f));
         hiddeWordsLabel.setForeground(TEXT_COLOR);
         hiddeWordsLabel.setBounds(WIDTH/2-hiddeWordsLabel.getWidth()/2,(HEIGHT-160)/2,WIDTH-190,100);
-        //hiddeWordsLabel.setBounds(200+(WIDTH-200)/2-70,HEIGHT-300,WIDTH-190,100);
  
         //layout
         GridLayout gridLayout = new GridLayout(3,9);
@@ -246,7 +277,6 @@ public class game extends JFrame implements ActionListener {
         
         getContentPane().add(play1);
         getContentPane().add(play2);
-        getContentPane().add(roundLabel);
         getContentPane().add(turnLabel);
         getContentPane().add(buttonPanel);
         getContentPane().add(hiddeWordsLabel);
@@ -256,8 +286,6 @@ public class game extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e){
         String command = e.getActionCommand().toLowerCase();
-        System.out.println(command);
-
         // disable button
         JButton button = (JButton) e.getSource();
         button.setEnabled(false);
@@ -267,9 +295,10 @@ public class game extends JFrame implements ActionListener {
             System.out.println();
             
         } else {
-            if (wordChallenge[round].contains(command)) {
-                System.out.print("Correct");
+            if (word.contains(command)) {
                 button.setBackground(Color.cyan);
+                ++count;
+                System.out.print(count);
                 if (turn==1) {
                     scorePlayer1 += 1;
                     displayScore1(scorePlayer1);
@@ -285,6 +314,16 @@ public class game extends JFrame implements ActionListener {
                 displayHeart1(lifeOfPlayer1);
                 button.setBackground(Color.PINK);
             }
+        }
+
+        if (count == word.length()) {
+            ++round;
+            count = 0;
+            displayRound();
+            System.out.println("Turn"+ round);
+            System.out.println("FINISH");
+        } else {
+            
         }
         //set turn
         if (turn ==1) {

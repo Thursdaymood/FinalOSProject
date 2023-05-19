@@ -73,7 +73,7 @@ class introFrame {
 		startPage();
 	}
 	
-	// -----------------------GUI/first page----------------------------
+	// -----------------------GUI/first page Button----------------------------
 	private void startPage() {
 		
 		// buttons
@@ -173,7 +173,7 @@ class introFrame {
 		labelMain.add(name);
 	}
 	
-	// ----------------------------------------------
+	// --------------------Font--------------------------
 	private Font getExternalFont20(String path) {
 		Font customFont = null;
 		
