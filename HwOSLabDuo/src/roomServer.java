@@ -97,7 +97,7 @@ class ServerRunnable implements Runnable {
 			
 			while(true){
 				// get words to play
-				randomWords();
+
 				for(int i = 0 ; i < word_random.size() ; i++ ){
 					output.writeUTF(word_random.get(i));
 					System.out.println(word_random.get(i));
@@ -148,37 +148,7 @@ class ServerRunnable implements Runnable {
 	}
 
 
-	// Random word in gameFile and insert it in woed_random
-	public static void randomWords() {
-		Random ran = new Random();
-		File file = new File("D:\\$\\Programming\\XProject\\FinalOSProject\\HwOSLabDuo\\resc\\miniVocab.txt");
-		int tmpNum = ran.nextInt(834) + 1;
-		String line;
-		Scanner scan;
-		try {
 
-			for (int i = 0; i < 5; i++) {
-
-				int count = 0;
-				scan = new Scanner(file); // must create a new one before start loop
-
-				while (scan.hasNextLine()) {
-
-					line = scan.nextLine();
-					if (count == tmpNum) {
-						System.out.println(line);
-					}
-					count++;
-				}
-				tmpNum = ran.nextInt(835) + 1; // generate new number
-				// System.out.println(i+": "+tmpNum); //details
-
-			}
-		} catch (Exception error) {
-			System.out.println(error);
-		}
-
-	}
 
 
 }

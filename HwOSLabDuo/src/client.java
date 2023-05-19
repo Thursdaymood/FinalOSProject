@@ -3,6 +3,7 @@ import java.net.InetAddress;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -83,11 +84,11 @@ class player1Runnable implements Runnable {
 	private int port = 0;
 	boolean stateRoom = false;
 	
-	private static Scanner scan = new Scanner(System.in);
-
+	// Game variable
+	ArrayList<String> wordsPlay = new ArrayList<String>();
+	
 	// Constructor
 	player1Runnable(int portUser) {
-
 		this.port = portUser;
 	}
 
@@ -97,22 +98,57 @@ class player1Runnable implements Runnable {
 		try {
 
 			// Connect the server in the same socket by choosing ip of server and port
-			// number
 			InetAddress localHost = InetAddress.getLocalHost();
 			String ipAddress = localHost.getHostAddress();
 			
 			socket = new Socket(ipAddress, port);
 			input = new DataInputStream(socket.getInputStream());
 			output = new DataOutputStream(socket.getOutputStream());
-			String message;
-			String revmes;
 			System.out.println("\tPlayer1 is ready ...");
-			// Communicate
+			
+			// ------------------In game-----------------------------	
 			while (!stateRoom) {
-				message = scan.nextLine();
-				output.writeUTF(message);
-				revmes = input.readUTF();
-				System.out.println(revmes);
+				
+				// Receive the vocabulary from server
+				String vocab = "";
+				while(vocab.equals("end")){
+					vocab = input.readUTF();
+					wordsPlay.add(vocab);
+				}
+				// GUI game
+				game guiPlay = new game();
+				guiPlay.addWords(wordsPlay);
+				
+				// (loop: play <-> wait)
+				boolean inPlaySection = true;
+				while(inPlaySection){
+					
+					// Playing -> 1 letter
+					boolean playTurn = true;
+					while(playTurn){
+						String ans = guiPlay.getLetter();
+						output.writeUTF(ans);
+						
+						
+						
+						
+					}
+					
+					// Waiting
+					// waiting until receive "your turn"
+					boolean waitTurn = true;
+					while(waitTurn){
+						
+					}
+					
+				}
+				
+				
+				
+				
+				
+				
+				stateRoom = true;
 			}
 
 			// Close
@@ -123,7 +159,8 @@ class player1Runnable implements Runnable {
 
 
 		} catch (Exception error) {
-			// System.out.println(error);
+			System.out.println(error);
+			System.out.println("Player1's Runnable section");
 		}
 
 	}
@@ -139,8 +176,9 @@ class player2Runnable implements Runnable {
 	DataOutputStream output = null;
 	boolean stateRoom = false;
 	private int port = 0;
-
-	Scanner scan = new Scanner(System.in);
+	
+	// Game variable
+	ArrayList<String> wordsPlay = new ArrayList<String>();
 
 	// Constructor
 	public player2Runnable(int port) {
@@ -151,30 +189,77 @@ class player2Runnable implements Runnable {
 	@Override
 	public void run() {
 		try {
+			// IP Address
 			InetAddress localHost = InetAddress.getLocalHost();
 			String ipAddress = localHost.getHostAddress();
+			
+			// Create socket
 			socket = new Socket(ipAddress, port);
 			input = new DataInputStream(socket.getInputStream());
 			output = new DataOutputStream(socket.getOutputStream());
-			// Communicate			
-			String message;
-			String revmes;
 			System.out.println("\tPlayer2 is ready ...");
+			
+			// ------------------In game-----------------------------		
 			while (!stateRoom) {
-				message = scan.nextLine();
-				output.writeUTF(message);
-				revmes = input.readUTF();
-				System.out.println(revmes);
+				
+				// Receive the vocabulary from server
+				String tmp = "";
+				while(!tmp.equals("end")){
+					tmp = input.readUTF();
+					wordsPlay.add(tmp);
+				}
+				// GUI game
+				game guiPlay = new game();
+				guiPlay.addWords(wordsPlay);
+				
+				// (loop: wait <-> play)
+				boolean inPlaySection = true;
+				while(inPlaySection){
+
+					// Waiting
+					// waiting until receive "your turn"
+					boolean waitTurn = true;
+					while(waitTurn){
+						
+						
+						
+						
+					}
+					
+					// Playing -> 1 letter
+					boolean playTurn = false;
+					while(!playTurn){
+						
+					}
+					
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				stateRoom = true;
 			}
+			// Close
 			socket.close();
 			input.close();
 			output.close();
 
 		}catch (Exception error) {
 			System.out.println(error);
+			System.out.println("Player2's Runnable section");
 		}
 
 	}
+	 
 
 	private void closeRoom() {
 		this.stateRoom = true;
