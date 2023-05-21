@@ -367,6 +367,9 @@ public class game extends JFrame implements ActionListener {
 			return this.scorePlayer2;
 		}
 	}
+	public int getWinner() {
+		return this.winner;
+	}
 
 	public int getLifePlayer(int player) {
 		if (player == 1) {
