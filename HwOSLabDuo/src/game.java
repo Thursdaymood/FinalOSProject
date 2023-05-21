@@ -367,9 +367,6 @@ public class game extends JFrame implements ActionListener {
 			return this.scorePlayer2;
 		}
 	}
-	public int getWinner() {
-		return this.winner;
-	}
 
 	public int getLifePlayer(int player) {
 		if (player == 1) {
@@ -408,6 +405,7 @@ public class game extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		System.out.println(wordChallenge);
 		String command = e.getActionCommand();
 		
 		// disable button
@@ -416,6 +414,8 @@ public class game extends JFrame implements ActionListener {
 
 		if (command.equals("EXIT")) {
 			System.out.println("Stop");
+			System.out.println(winner);
+			System.out.println("winner"+getWinner());
 			System.exit(0);
 
 		} else {
@@ -539,6 +539,9 @@ public class game extends JFrame implements ActionListener {
 
 	public void setVisible() {
 		this.setVisible(true);
+	}
+	public int getWinner() {
+		return this.winner;
 	}
 
 	public static void main(String[] args) {

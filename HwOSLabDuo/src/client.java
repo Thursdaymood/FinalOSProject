@@ -54,8 +54,8 @@ public class client {
 class playFrame {
 
 	// Picture
-	private ImageIcon imageIcon = new ImageIcon("resc//idea.png");
-	private ImageIcon bg = new ImageIcon("resc//pixelSky.gif");
+	private ImageIcon imageIcon = new ImageIcon("HwOSLabDuo/resc/idea.png");//resc//idea.png
+	private ImageIcon bg = new ImageIcon("HwOSLabDuo/resc/skyPixel.gif");//resc//pixelSky.gif
 
 	// Structure
 	private JFrame frame;
