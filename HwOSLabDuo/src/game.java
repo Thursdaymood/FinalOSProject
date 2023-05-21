@@ -398,8 +398,6 @@ public class game extends JFrame implements ActionListener {
         }
 
  
-
-        
         //set turn
         if (turn ==1) {
             turn = 2;
@@ -424,15 +422,7 @@ public class game extends JFrame implements ActionListener {
     		this.lifeOfPlayer1 -=1;
     	}
     }
-    // public void addScore(int player){
-    // 	if(player == 1){
-    // 		this.lifeOfPlayer1 +=1;
-    // 	}if(player == 2){
-    // 		this.lifeOfPlayer2 +=1;
-    // 	}
-    	
 
-    // };
  
     public int getScorePlayer(int player) {
     	if(player == 1){
@@ -466,6 +456,12 @@ public class game extends JFrame implements ActionListener {
     	}
     }
     
+    public void addKeyBoardPlay(String keyboardInput) {
+        ActionEvent input = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, keyboardInput);
+        actionPerformed(input);
+
+        
+    }
     public ArrayList<String> getKeyBoard() {
     	return this.listInput;
     }
