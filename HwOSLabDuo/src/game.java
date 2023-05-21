@@ -286,6 +286,75 @@ public class game extends JFrame implements ActionListener {
 			letterButtons[currentIndex] = button;
 			buttonPanel.add(letterButtons[currentIndex]);
 		}
+ 
+        //set turn
+        if (turn ==1) {
+            turn = 2;
+            
+        } else {
+            turn = 1;
+        }
+        displayTurn();
+        listInput.clear();
+
+    }
+    
+    // set the ArrayList that store the vocabulary
+    public void addWords(ArrayList<String> user) {
+    	this.wordChallenge = user;
+    }
+    public void deleteLife1(int player){
+    	if(player == 1){
+    		this.lifeOfPlayer1 -=1;
+    	}
+    	if(player == 2){
+    		this.lifeOfPlayer1 -=1;
+    	}
+    }
+
+ 
+    public int getScorePlayer(int player) {
+    	if(player == 1){
+    		return this.scorePlayer1;
+    	}else{
+    		return this.scorePlayer2;
+    	}
+    }
+    
+    public int getLifePlayer(int player) {
+    	if(player == 1){
+    		return this.lifeOfPlayer1;
+    	}else{
+    		return this.lifeOfPlayer2;
+    	}
+    }
+    public void setScorePlayer(int player, int num){
+    	if(player ==1){
+    		this.scorePlayer1 = num;
+    	}
+    	if(player == 2){
+    		this.scorePlayer2 = num;
+    	}
+    }
+    public void setLifeOfPlayer(int player, int num){
+    	if(player ==1){
+    		this.lifeOfPlayer1 = num;
+    	}
+    	if(player == 2){
+    		this.lifeOfPlayer2 = num;
+    	}
+    }
+    
+    public void addKeyBoardPlay(String keyboardInput) {
+        ActionEvent input = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, keyboardInput);
+        actionPerformed(input);
+
+        
+    }
+    public ArrayList<String> getKeyBoard() {
+    	return this.listInput;
+    }
+
 
 		// Give up button
 		JButton giveUpButton = new JButton("Give Up");
@@ -413,43 +482,6 @@ public class game extends JFrame implements ActionListener {
 
 	// };
 
-	public int getScorePlayer(int player) {
-		if (player == 1) {
-			return this.scorePlayer1;
-		} else {
-			return this.scorePlayer2;
-		}
-	}
-
-	public int getLifePlayer(int player) {
-		if (player == 1) {
-			return this.lifeOfPlayer1;
-		} else {
-			return this.lifeOfPlayer2;
-		}
-	}
-
-	public void setScorePlayer(int player, int num) {
-		if (player == 1) {
-			this.scorePlayer1 = num;
-		}
-		if (player == 2) {
-			this.scorePlayer2 = num;
-		}
-	}
-
-	public void setLifeOfPlayer(int player, int num) {
-		if (player == 1) {
-			this.lifeOfPlayer1 = num;
-		}
-		if (player == 2) {
-			this.lifeOfPlayer2 = num;
-		}
-	}
-
-	public ArrayList<String> getKeyBoard() {
-		return this.listInput;
-	}
 
 	public boolean checkLetter(boolean answer) {
 		return answer;
