@@ -516,14 +516,6 @@ public class game extends JFrame implements ActionListener {
 			this.lifeOfPlayer1 -= 1;
 		}
 	}
-	// public void addScore(int player){
-	// if(player == 1){
-	// this.lifeOfPlayer1 +=1;
-	// }if(player == 2){
-	// this.lifeOfPlayer2 +=1;
-	// }
-
-	// };
 
 	public boolean checkLetter(boolean answer) {
 		return answer;
