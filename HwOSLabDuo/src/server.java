@@ -110,15 +110,14 @@ public class server implements Runnable {
 						// waiting the data from player1
 						while(score == 0 || life  == 0 || keyboard.equals("")) {
 							
-							// keyboard = inputA.readLine();
-							// life = inputA.readLine();
-							// score = inputA.readLine();
-							
+							keyboard = inputA.readLine();
+							life = inputA.readInt();
+							score = inputA.readInt();
 						}
 						// send to player2
-						//outputB.writeUTF(keyboard);
-						//outputB.writeInt(life);
-						//outputB.writeInt(score);
+						outputB.writeUTF(keyboard);
+						outputB.writeInt(life);
+						outputB.writeInt(score);
 						round++;
 					}
 					// player 2

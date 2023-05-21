@@ -134,19 +134,20 @@ class player1Runnable implements Runnable {
 						int score = 0;
 						while (waitingKeyBoard) {
 							while (true/* getKeyBoard */) {
-
-								/* ArrayList keyboard is not empty (break loop) */
-								// assign the variable keyboard here
+								boolean isEmpty = guiPlay.getKeyBoard().isEmpty();
+								if(!isEmpty){
+									keyboard = guiPlay.getKeyBoard().get(0);
+									break;
+								}
 							}
-
-							// life = guiPlay.getlife() // get life
-							// score = guiPlay.getScore // get score
+							life = guiPlay.getLifePlayer(1); // get life
+							score = guiPlay.getScorePlayer(1); // get score
 						}
 						// Send all data to server, and server send to the player 2
-						// output.writeUTF(keyboard);
-						// output.writeInt(life);
-						// output.writeInt(score);
-						// playTurn = guiPlay.changeTurn()// changeTurn
+						output.writeUTF(keyboard);
+						output.writeInt(life);
+						output.writeInt(score);
+						playTurn = guiPlay.changeTurn();// changeTurn
 					}
 
 					// Waiting
@@ -257,14 +258,14 @@ class player2Runnable implements Runnable {
 						int score = 0;
 						while (keyboard.equals("") || life == 0 || score == 0) {
 							// wait until get all data from player1 -> break loop
-							// keyboard = input.readline();
-							// life = input.readInt();
-							// score = input.readInt();
+							keyboard = input.readLine();
+							life = input.readInt();
+							score = input.readInt();
 						}
 						// set all data of player1
-						// guiPlay.setScore(); // set the score
-						// guiPlay.setLife(); // set the life
-						// guiPlay.addKeyBoardPlay();// set keyboard
+						guiPlay.setScorePlayer(1, score); // set the score
+						guiPlay.setLifeOfPlayer(1, life); // set the life
+						// guiPlay.addKeyBoardPlayer();// set keyboard
 
 						// waitTurn = guiPlay.changeTurn();
 
