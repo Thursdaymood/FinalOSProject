@@ -9,12 +9,16 @@ import java.awt.Graphics2D;
 
 /*
  * play1,2 จะมารวมกัน
- * เชื่อข้อมูล wordChallenge
+ * เชื่อข้อมูล wordChallenge 
  * ลดหัวใจ
- * เปลี่ยนhidden
- * ผลแพ้ชนะ
- * ใครwin
- * เปลี่ยนround
+ * เปลี่ยนhidden /
+ * ผลแพ้ชนะ /
+ * ใครwin /
+ * link หน้าประกาศผล
+ * เมื่อroundเปลี่ยนให้เริ่มต้นเกมใหม่ /
+ * ส่งผลการกดแป้นพิมพ์
+ * give up เปลี่ยนเป็นอย่างอื่น
+ * life round
  */
 
 public class game extends JFrame implements ActionListener {
@@ -24,14 +28,14 @@ public class game extends JFrame implements ActionListener {
     private roomServer server;
     private String word ; //แก้การเข้าถึงกำหนดindex
     private int host,roomId,
-                lifeOfPlayer1 = 3 , 
-                lifeOfPlayer2 = 3 ,
+                lifeOfPlayer1 = 5 , 
+                lifeOfPlayer2 = 5 ,
                 scorePlayer1 = 0,
                 scorePlayer2 = 0,
                 count=0; 
     private JLabel hiddeWordsLabel,play1,play2,roundLabel,displayScore1,displayScore2,turnLabel;
 
-    private int round = 1, turn = 1;
+    private int round = 0, turn = 1;
     private final int WIDTH = 800;
     private final int HEIGHT = 500;
     static int margin = 30;
@@ -71,7 +75,7 @@ public class game extends JFrame implements ActionListener {
 
 	}
 
-    private void displayHeart1(int life){
+    private void displayLife1(int life){
         int pos_x = margin;
         
         for (int i = 0; i < life; i++) {
@@ -112,10 +116,7 @@ public class game extends JFrame implements ActionListener {
         int pos_x = margin;
         
         for (int i = 0; i < life; i++) {
-            ImageIcon image = new ImageIcon("HwOSLabDuo/resc/heart.png");
-            Image smallImage = image.getImage().getScaledInstance(size_heart, size_heart, Image.SCALE_SMOOTH);
-            ImageIcon smallIcon = new ImageIcon(smallImage);
-            JLabel heart = new JLabel(smallIcon);
+            JLabel heart = new JLabel("Life: "+ life);
             heart.setBounds(pos_x, 65 + ((HEIGHT/2-30)), size_heart, size_heart);
             getContentPane().add(heart);
             for (int j = 0; j < 3-life; j++) {
@@ -165,12 +166,12 @@ public class game extends JFrame implements ActionListener {
         if(turnLabel != null) {
             getContentPane().remove(roundLabel);
         }
-        roundLabel = new JLabel("Round: "+ round + " / 5");
+        roundLabel = new JLabel("Round: "+ (round+1) + " / 5");
         roundLabel.setForeground(TEXT_COLOR);
         roundLabel.setBounds(WIDTH - 150, 30, 150, 30);
         roundLabel.setFont(customFont.deriveFont(20f));
         getContentPane().add(roundLabel);    
-        
+        // up date roundLabel
         revalidate();
         repaint();
     }
@@ -189,6 +190,25 @@ public class game extends JFrame implements ActionListener {
         }
         
     }
+    private void resetGame(){
+        // load new challenge
+        word = wordChallenge.get(round);
+
+        // update hiddenWord
+        String hiddenWord =hiddeWords(word);
+        hiddeWordsLabel.setText(hiddenWord);
+
+        // enable all buttons again
+        for(int i = 0; i < letterButtons.length; i++){
+            letterButtons[i].setEnabled(true);
+            letterButtons[i].setBackground(PRIMARY_COLOR);
+            letterButtons[i].setBackground(BACKGROUND);
+            letterButtons[i].setFont(customFont.deriveFont(15f));
+            letterButtons[i].setForeground(BACKGROUND);
+            letterButtons[i].setOpaque(true);
+        }
+    }
+
     public void createroom(){
         setTitle("Hangman Game Room"+roomId);
         setSize(WIDTH, HEIGHT);
@@ -200,13 +220,16 @@ public class game extends JFrame implements ActionListener {
     }
 
     public game(){
-
+        wordChallenge.add("ability");
+        wordChallenge.add("above");
+        wordChallenge.add("about");
+        wordChallenge.add("account");
+        wordChallenge.add("acres");
         // init vars
         letterButtons = new JButton[26];
         customFont = createFont("HwOSLabDuo/resc/Raleway-SemiBold.ttf");
         word = wordChallenge.get(round);
 
-        //wordChallenge = server.word_random();
         //สร้างloop
         createroom();
         addGuiComponents();
@@ -219,7 +242,7 @@ public class game extends JFrame implements ActionListener {
         play1.setBounds(margin, 30, 120, 30);
         play1.setFont(customFont.deriveFont(25f));
         play1.setForeground(TEXT_COLOR);
-        displayHeart1(lifeOfPlayer1);
+        displayLife1(lifeOfPlayer1);
         displayScore1(scorePlayer1);
 
         play2 = new JLabel("PLAYER 2");
@@ -230,23 +253,10 @@ public class game extends JFrame implements ActionListener {
         displayScore2(scorePlayer2);
 
 
-
-        /******************      DISPLAY GAME       ******************/
+        /******************      DISKPLAY GAME       ******************/
         displayRound();
         displayTurn();
-
-        /******************      DISPLAY GAME       ******************/
-        roundLabel = new JLabel("Round: "+ (round+1) + " / 5");
-        roundLabel.setForeground(TEXT_COLOR);
-        roundLabel.setBounds(WIDTH - 150, 30, 150, 30);
-        roundLabel.setFont(customFont.deriveFont(20f));
-
-        // turnLabel = new JLabel("TURN: PLAYER "+ turn);
-        // turnLabel.setForeground(TEXT_COLOR);
-        // turnLabel.setBounds(WIDTH/2-70, 30, 200, 30);
-        // turnLabel.setFont(customFont.deriveFont(20f));
-        displayTurn();
-
+        
 
         //hidden word
         hiddeWordsLabel = new JLabel(hiddeWords(word));
@@ -287,7 +297,6 @@ public class game extends JFrame implements ActionListener {
         giveUpButton.addActionListener(this);
         buttonPanel.add(giveUpButton);
 
-        
         getContentPane().add(play1);
         getContentPane().add(play2);
         getContentPane().add(turnLabel);
@@ -297,46 +306,80 @@ public class game extends JFrame implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e){
-        String command = e.getActionCommand().toLowerCase();
-
+        String command = e.getActionCommand();
         // disable button
         JButton button = (JButton) e.getSource();
         button.setEnabled(false);
+
         if (command.equals("give up")) {
             System.out.println("Stop");
             System.out.println();
             System.out.println();
             
         } else {
-            if (word.contains(command)) {
+            if (word.contains(command.toLowerCase())) {
                 button.setBackground(Color.cyan);
-                ++count;
-                System.out.print(count);
-                if (turn==1) {
+                
+                if (turn== 1) {
                     scorePlayer1 += 1;
                     displayScore1(scorePlayer1);
-                } else {
+                } else if (turn == 2) {
                     scorePlayer2 += 1;
-                    displayScore2(scorePlayer1);
+                    displayScore2(scorePlayer2);
                 }
-                
+
+                //store input and change hiddenLabel,so update the hidden text.
+                char[] hiddenWord = hiddeWordsLabel.getText().toCharArray();
+                System.out.println(hiddenWord);
+
+
+                for (int i = 0; i < word.length(); i++) {
+                    // update _ to correct letter
+                    if (word.charAt(i) == command.toLowerCase().charAt(0)) {
+                        
+                        //นับletterที่ถูก
+                        ++count;  
+                        if( i!= 0){
+                            hiddenWord[2*i] = command.charAt(0);   
+                        }
+                        else{
+                            hiddenWord[i] = command.charAt(0);
+                        }
+                           
+                    }
+                    
+                }
+                // update hiddenWordLabel
+                hiddeWordsLabel.setText(String.valueOf(hiddenWord));
+                System.out.println(hiddenWord);
+            
                 
             }
             else{
                 lifeOfPlayer1 -= 1;
-                displayHeart1(lifeOfPlayer1);
+                displayLife1(lifeOfPlayer1);
                 button.setBackground(Color.PINK);
             }
         }
-
-        if (count == word.length()) {
+        // finish round check who win.
+        System.out.println("word length: "+word.length());
+        System.out.println("Count: "+count);
+        if (count == word.length() && round != 4) {
             ++round;
             count = 0;
             displayRound();
-            System.out.println("Turn"+ round);
+            System.out.println("Turn "+ round);
             System.out.println("FINISH");
+            resetGame();
         } else {
-            
+            if (scorePlayer1 > scorePlayer2) {
+                System.out.println("Player1 win");
+            } else if (scorePlayer1 < scorePlayer2){
+                System.out.println("Player2 win");
+            }
+            else{
+                System.out.println("Draw");
+            }
         }
         //set turn
         if (turn ==1) {
@@ -348,10 +391,6 @@ public class game extends JFrame implements ActionListener {
         
 
     }
-    // public void actionPerformed(ActionEvent e) {
-    //     // handle button click event
-    //     System.out.println("Button clicked!");
-    // }
     
     // set the ArrayList that store the vocabulary
     public void addWords(ArrayList<String> user) {
@@ -365,14 +404,20 @@ public class game extends JFrame implements ActionListener {
     		this.lifeOfPlayer1 -=1;
     	}
     }
-    public void addScore(int player){
-    	if(player == 1){
-    		this.lifeOfPlayer1 +=1;
-    	}if(player == 2){
-    		this.lifeOfPlayer2 +=1;
-    	}
+    // public void addScore(int player){
+    // 	if(player == 1){
+    // 		this.lifeOfPlayer1 +=1;
+    // 	}if(player == 2){
+    // 		this.lifeOfPlayer2 +=1;
+    // 	}
     	
-    };
+    // };
+    public int getScorePlay1() {
+        return scorePlayer1;
+    }
+    public int getScorePlay2() {
+        return scorePlayer2;
+    }
     public boolean checkLetter(boolean answer){
     	return answer;
     }
@@ -386,11 +431,7 @@ public class game extends JFrame implements ActionListener {
     	return false;
     }
     
-    
-    
     public static void main(String[] args) {
-        // int host = Integer.parseInt(args[0]);
-        // String room = args[1];
         new game().setVisible(true);
     }
 
