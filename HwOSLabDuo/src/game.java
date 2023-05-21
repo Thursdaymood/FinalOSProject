@@ -4,8 +4,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+
 
 /*
  * play1,2 จะมารวมกัน
@@ -18,22 +17,22 @@ import java.awt.Graphics2D;
  * เมื่อroundเปลี่ยนให้เริ่มต้นเกมใหม่ /
  * ส่งผลการกดแป้นพิมพ์
  * give up เปลี่ยนเป็นอย่างอื่น
- * life round
+ * life round /
+ * arraylistเก็บcommand /
  */
 
 public class game extends JFrame implements ActionListener {
 
     //store wordChallenge export form server
     private ArrayList<String> wordChallenge = new ArrayList<String>();
-    private roomServer server;
     private String word ; //แก้การเข้าถึงกำหนดindex
-    private int host,roomId,
+    private int roomId,
                 lifeOfPlayer1 = 5 , 
                 lifeOfPlayer2 = 5 ,
                 scorePlayer1 = 0,
                 scorePlayer2 = 0,
                 count=0; 
-    private JLabel hiddeWordsLabel,play1,play2,roundLabel,displayScore1,displayScore2,turnLabel;
+    private JLabel hiddeWordsLabel,play1,play2,roundLabel,displayScore1,displayScore2,turnLabel,life1,life2;
 
     private int round = 0, turn = 1;
     private final int WIDTH = 800;
@@ -45,6 +44,7 @@ public class game extends JFrame implements ActionListener {
     static Color PRIMARY_COLOR = Color.WHITE;
     static Color SECONDARY_COLOR = Color.decode("#FCA311");
     private Font customFont;
+    private ArrayList<String> listInput = new ArrayList<String>();
     private JButton[] letterButtons;
     private String answer = "";
 
@@ -76,24 +76,25 @@ public class game extends JFrame implements ActionListener {
 	}
 
     private void displayLife1(int life){
-        int pos_x = margin;
-        
-        for (int i = 0; i < life; i++) {
-            ImageIcon image = new ImageIcon("HwOSLabDuo/resc/heart.png");
-            Image smallImage = image.getImage().getScaledInstance(size_heart, size_heart, Image.SCALE_SMOOTH);
-            ImageIcon smallIcon = new ImageIcon(smallImage);
-            JLabel heart = new JLabel(smallIcon);
-            heart.setBounds(pos_x, 65 , size_heart, size_heart);
-            getContentPane().add(heart);
-            for (int j = 0; j < 3-life; j++) {
-                getContentPane().remove(heart);
-            }
-            
+        //int pos_x = margin;
+        // for (int i = 0; i < life; i++) {
+            // ImageIcon image = new ImageIcon("HwOSLabDuo/resc/heart.png");
+            // Image smallImage = image.getImage().getScaledInstance(size_heart, size_heart, Image.SCALE_SMOOTH);
+            // ImageIcon smallIcon = new ImageIcon(smallImage);
+            // JLabel heart = new JLabel(smallIcon);
+        //     heart.setBounds(pos_x, 65 , size_heart, size_heart);
+        //     getContentPane().add(heart);
+        //     for (int j = 0; j < 3-life; j++) {
+        //         getContentPane().remove(heart);
+        //     }
+        //     pos_x += size_heart+10;
+        //  }
 
-            pos_x += size_heart+10;
-         }
-        revalidate();
-        repaint();
+        life1 = new JLabel("Life: "+ life);
+        life1.setFont(customFont.deriveFont(20f));
+        life1.setForeground(TEXT_COLOR);
+        life1.setBounds(margin, 65, 120,30);
+        getContentPane().add(life1);
 
     }
 
@@ -112,22 +113,14 @@ public class game extends JFrame implements ActionListener {
         revalidate();
         repaint();
     }
-    private void displayHeart2(int life){
-        int pos_x = margin;
-        
-        for (int i = 0; i < life; i++) {
-            JLabel heart = new JLabel("Life: "+ life);
-            heart.setBounds(pos_x, 65 + ((HEIGHT/2-30)), size_heart, size_heart);
-            getContentPane().add(heart);
-            for (int j = 0; j < 3-life; j++) {
-                getContentPane().remove(heart);
-            }
-            
+    private void displayLife2(int life){
 
-            pos_x += size_heart+10;
-         }
-        revalidate();
-        repaint();
+        life2 = new JLabel("Life: "+ life);
+        life2.setFont(customFont.deriveFont(20f));
+        life2.setForeground(TEXT_COLOR);
+        life2.setBounds(margin, 65 + ((HEIGHT/2-30)), 120,30);
+        getContentPane().add(life2);
+
 
     }
 
@@ -191,6 +184,7 @@ public class game extends JFrame implements ActionListener {
         
     }
     private void resetGame(){
+        
         // load new challenge
         word = wordChallenge.get(round);
 
@@ -207,6 +201,11 @@ public class game extends JFrame implements ActionListener {
             letterButtons[i].setForeground(BACKGROUND);
             letterButtons[i].setOpaque(true);
         }
+
+        //update life
+        life1.setText("Life: "+ 5);
+        life1.setText("Life: "+ 5);
+
     }
 
     public void createroom(){
@@ -220,11 +219,16 @@ public class game extends JFrame implements ActionListener {
     }
 
     public game(){
-        wordChallenge.add("ability");
-        wordChallenge.add("above");
-        wordChallenge.add("about");
-        wordChallenge.add("account");
-        wordChallenge.add("acres");
+        wordChallenge.add("ab");
+        wordChallenge.add("ac");
+        wordChallenge.add("abc");
+        wordChallenge.add("acct");
+        wordChallenge.add("acr");
+        // wordChallenge.add("ability");
+        // wordChallenge.add("above");
+        // wordChallenge.add("about");
+        // wordChallenge.add("account");
+        // wordChallenge.add("acres");
         // init vars
         letterButtons = new JButton[26];
         customFont = createFont("HwOSLabDuo/resc/Raleway-SemiBold.ttf");
@@ -249,7 +253,7 @@ public class game extends JFrame implements ActionListener {
         play2.setBounds(margin, HEIGHT/2, 120, 30);
         play2.setFont(customFont.deriveFont(25f));
         play2.setForeground(TEXT_COLOR);
-        displayHeart2(lifeOfPlayer2);
+        displayLife2(lifeOfPlayer2);
         displayScore2(scorePlayer2);
 
 
@@ -294,7 +298,7 @@ public class game extends JFrame implements ActionListener {
         giveUpButton.setForeground(BACKGROUND);
         giveUpButton.setBackground(BACKGROUND);
         giveUpButton.setOpaque(true);
-        giveUpButton.addActionListener(this);
+        //giveUpButton.addActionListener(this);
         buttonPanel.add(giveUpButton);
 
         getContentPane().add(play1);
@@ -317,6 +321,8 @@ public class game extends JFrame implements ActionListener {
             System.out.println();
             
         } else {
+            listInput.add(command);
+            System.out.println("Input: "+listInput);
             if (word.contains(command.toLowerCase())) {
                 button.setBackground(Color.cyan);
                 
@@ -356,39 +362,41 @@ public class game extends JFrame implements ActionListener {
                 
             }
             else{
-                lifeOfPlayer1 -= 1;
-                displayLife1(lifeOfPlayer1);
+                if (turn== 1) {
+                    lifeOfPlayer1 -= 1;
+                    life1.setText("Life: "+ lifeOfPlayer1);
+                } else if (turn == 2) {
+                    lifeOfPlayer2 -= 1;
+                    life2.setText("Life: "+ lifeOfPlayer2);
+                }
                 button.setBackground(Color.PINK);
             }
         }
         // finish round check who win.
-        System.out.println("word length: "+word.length());
-        System.out.println("Count: "+count);
-        if (count == word.length() && round != 4) {
+        if (count == word.length() || lifeOfPlayer1 < 1 || lifeOfPlayer2 < 1 && round <= 4) {
             ++round;
             count = 0;
             displayRound();
+            lifeOfPlayer1 = 5;
+            lifeOfPlayer2 = 5;
+            life1.setText("command");
+            
             System.out.println("Turn "+ round);
             System.out.println("FINISH");
             resetGame();
-        } else {
-            if (scorePlayer1 > scorePlayer2) {
-                System.out.println("Player1 win");
-            } else if (scorePlayer1 < scorePlayer2){
-                System.out.println("Player2 win");
-            }
-            else{
-                System.out.println("Draw");
-            }
         }
+ 
+
+        
         //set turn
         if (turn ==1) {
             turn = 2;
             
         } else {
             turn = 1;
-        }displayTurn();
-        
+        }
+        displayTurn();
+        listInput.clear();
 
     }
     
@@ -420,6 +428,14 @@ public class game extends JFrame implements ActionListener {
     public int getScorePlay2() {
         return this.scorePlayer2;
     }
+    public int getLifeOfPlayer1() {
+        return this.lifeOfPlayer1;
+    }
+    public int getLifeOfPlayer2() {
+        return this.lifeOfPlayer2;
+    }
+    //get listInput
+
     public boolean checkLetter(boolean answer){
     	return answer;
     }
