@@ -42,7 +42,7 @@ public class Winner extends JFrame {
         } else if (result == "lost") {
             message = new JLabel("YOU LOST!", SwingConstants.CENTER);
         }
-        message.setFont(getExternalFont20("Mali-SemiBoldItalic.ttf"));        
+        message.setFont(getExternalFont20("HwOSLabDuo/resc/Mali-SemiBoldItalic.ttf"));        
         message.setForeground(TEXT_COLOR);
         message.setBounds(0, HEIGHT/2 - message.getHeight()/2, WIDTH, HEIGHT);
         background.setLayout(new BorderLayout());

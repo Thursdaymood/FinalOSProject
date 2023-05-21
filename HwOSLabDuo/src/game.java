@@ -9,13 +9,13 @@ import java.util.ArrayList;
 /*
  * play1,2 จะมารวมกัน
  * เชื่อข้อมูล wordChallenge 
- * ลดหัวใจ
  * เปลี่ยนhidden /
  * ผลแพ้ชนะ /
  * ใครwin /
  * link หน้าประกาศผล
  * เมื่อroundเปลี่ยนให้เริ่มต้นเกมใหม่ /
  * ส่งผลการกดแป้นพิมพ์
+ * แยกplayer1 player2
  * give up เปลี่ยนเป็นอย่างอื่น
  * life round /
  * arraylistเก็บcommand /
@@ -32,7 +32,7 @@ public class game extends JFrame implements ActionListener {
                 scorePlayer1 = 0,
                 scorePlayer2 = 0,
                 count=0; 
-    private JLabel hiddeWordsLabel,play1,play2,roundLabel,displayScore1,displayScore2,turnLabel,life1,life2;
+    private JLabel hiddeWordsLabel,play1,play2,roundLabel,displayScore1,displayScore2,turnLabel,life1,life2,resultMessage;
 
     private int round = 0, turn = 1;
     private final int WIDTH = 800;
@@ -209,6 +209,25 @@ public class game extends JFrame implements ActionListener {
         life2.setText("Life: "+ lifeOfPlayer2);
 
     }
+    public void createResultDialog() {
+        JDialog resuleDialog = new JDialog();
+        resuleDialog.setSize(300, 200);
+        resuleDialog.getContentPane().setBackground(BACKGROUND);
+        resuleDialog.setForeground(TEXT_COLOR);
+        resuleDialog.setLocationRelativeTo(null);
+        resuleDialog.setVisible(true);
+
+        resultMessage = new JLabel("Hello, world!");
+        resultMessage.setForeground(TEXT_COLOR);
+
+        JButton resulButton = new JButton();
+        resulButton.setForeground(BACKGROUND);
+        resulButton.addActionListener(this);
+
+        resuleDialog.add(resultMessage);
+        resuleDialog.add(resulButton);
+       
+    }
 
     public void createroom(){
         setTitle("Hangman Game Room"+roomId);
@@ -221,20 +240,17 @@ public class game extends JFrame implements ActionListener {
     }
 
     public game(){
-        wordChallenge.add("ab");
-        wordChallenge.add("ac");
-        wordChallenge.add("abc");
-        wordChallenge.add("acct");
-        wordChallenge.add("acr");
-        // wordChallenge.add("ability");
-        // wordChallenge.add("above");
-        // wordChallenge.add("about");
-        // wordChallenge.add("account");
-        // wordChallenge.add("acres");
+        System.out.println("wordchallenge" + wordChallenge);
+        wordChallenge.add("ability");
+        wordChallenge.add("above");
+        wordChallenge.add("about");
+        wordChallenge.add("account");
+        wordChallenge.add("acres");
         // init vars
         letterButtons = new JButton[26];
         customFont = createFont("HwOSLabDuo/resc/Raleway-SemiBold.ttf");
         word = wordChallenge.get(round);
+        createResultDialog();
 
         //สร้างloop
         createroom();
