@@ -29,6 +29,7 @@ public class server implements Runnable {
 	server(int room, int player) throws IOException {
 		this.roomNum = room;
 		this.playerNum = player;
+		this.wordRandom = randomWords();
 	}
 
 	@Override
@@ -37,10 +38,9 @@ public class server implements Runnable {
 		randomWords(); // Generate 1 set of vocabulary
 
 		// ------------------------Connection-----------------------------------------------------
-		boolean allPlayerConnect = false;
 		boolean player1Connect = false;
 		boolean player2Connect = false;
-		while (!allPlayerConnect) {
+		while (!player1Connect || !player2Connect) {
 			try {
 				if (playerNum == 1) {
 					while (!player1Connect) {
@@ -64,17 +64,16 @@ public class server implements Runnable {
 
 					} catch (Exception error) {
 						System.out.println(error);
-						System.out.println("allPlayerConnection section");
+						System.out.println("allPlayerConnection section (Server)");
 					}
 
 				}
 			} catch (Exception error) {
 				System.out.println(error);
+				System.out.println("Connect section (Server)");
 			}
-			System.out.println("Players are ready");
-			allPlayerConnect = true;
 		}
-
+		System.out.println("Players are ready (Server)");
 		// -------------------------In game------------------------
 		boolean stateGame = false;
 		while (!stateGame) {
@@ -100,7 +99,7 @@ public class server implements Runnable {
 				boolean inPlaySection = true;
 				int round = 1;
 				while (inPlaySection) {
-
+					System.out.println("Round: "+ round);
 					// player1
 					if (round % 2 != 0) {
 						
@@ -128,16 +127,19 @@ public class server implements Runnable {
 						int score = 0;
 						// waiting the data from player2
 						while(score == 0 || life  == 0 || keyboard.equals("")) {
-							// keyboard = inputB.readLine();
-							// life = inputB.readLine();
-							// score = inputB.readLine();
+							keyboard = inputB.readLine();
+							life = inputB.readInt();
+							score = inputB.readInt();
 						}
 						// send to player1
-						//outputA.writeUTF(keyboard);
-						//outputA.writeInt(life);
-						//outputA.writeInt(score);
+						outputA.writeUTF(keyboard);
+						outputA.writeInt(life);
+						outputA.writeInt(score);
 
 						round++;
+					}
+					if(round == 4){
+						inPlaySection = false;
 					}
 
 				}
@@ -146,7 +148,7 @@ public class server implements Runnable {
 				// The end of try catch block
 			} catch (Exception error) {
 				System.out.println(error);
-				System.out.println("In-game section");
+				System.out.println("In-game section (Server)");
 			}
 
 		}
@@ -154,34 +156,36 @@ public class server implements Runnable {
 	}
 
 	// Random word in gameFile and insert it in woed_random
-	private static void randomWords() {
+	private static ArrayList<String> randomWords() {
 		Random ran = new Random();
-		File file = new File("HwOSLabDuo\\resc\\miniVocab.txt");
-		int tmpNum = ran.nextInt(834) + 1;
+		ArrayList<String> tmpList = new ArrayList<String>();
+		File file = new File("resc\\miniVocab.txt");
 		String line;
 		Scanner scan;
 		try {
 
 			for (int i = 0; i < 5; i++) {
-
 				int count = 0;
+				int tmpNum = ran.nextInt(834) + 1; // generate new number
 				scan = new Scanner(file); // must create a new one before start loop
 
-				while (scan.hasNextLine()) {
-
+				while (scan.hasNextLine()) {					
 					line = scan.nextLine();
-					if (count == tmpNum) {
-						System.out.println(line);
-					}
 					count++;
+					if (count == tmpNum) {
+						//System.out.println(line);
+						tmpList.add(line);
+					}
+					
 				}
-				tmpNum = ran.nextInt(835) + 1; // generate new number
 				// System.out.println(i+": "+tmpNum); //details
 
 			}
 		} catch (Exception error) {
 			System.out.println(error);
+			System.out.println("Random Words (Server)");
 		}
+		return tmpList;
 
 	}
 
@@ -199,13 +203,6 @@ public class server implements Runnable {
 		this.playerNum = tmp;
 	}
 
-	private void taskA(Socket socket) {
-		System.out.println("HelloA");
 
-	}
-
-	private void taskB(Socket socket) {
-		System.out.println("HelloB");
-	}
 
 }
