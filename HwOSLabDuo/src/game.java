@@ -223,7 +223,7 @@ public class game extends JFrame implements ActionListener {
 		this.who = whoPlayer;
 		// init vars
 		letterButtons = new JButton[26];
-		customFont = createFont("resc/Raleway-SemiBold.ttf");
+		customFont = createFont("HwOSLabDuo/resc/Mali-SemiBoldItalic.ttf");
 		word = wordChallenge.get(round);
 
 		//start game
@@ -330,7 +330,7 @@ public class game extends JFrame implements ActionListener {
 		listInput.clear();
 
 		// Give up button
-		JButton giveUpButton = new JButton("Give Up");
+		JButton giveUpButton = new JButton(" ");
 		giveUpButton.setFont(customFont.deriveFont(13f));
 		giveUpButton.setForeground(BACKGROUND);
 		giveUpButton.setBackground(BACKGROUND);
@@ -468,7 +468,7 @@ public class game extends JFrame implements ActionListener {
 		}
 		// finish round check who win.
 		System.out.println("round: " + round);
-		if (count == word.length()) {
+		if (count == word.length() || lifeOfPlayer1 <1 || lifeOfPlayer2 <1 ) {
 			if (round < 4) {
 				++round;
 				count = 0;
@@ -503,6 +503,7 @@ public class game extends JFrame implements ActionListener {
 		} else {
 			turn = 1;
 		}
+
 		displayTurn();
 		listInput.clear();
 
