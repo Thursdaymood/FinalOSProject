@@ -10,19 +10,20 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 public class client {
-	
+
 	int[][] ports = { { 2221, 2222 }, { 2223, 2224 }, { 2225, 2226 }, { 2227, 2228 } };
+
 	// Constructor
 	public client(int player, int room) {
-		
+
 		// Create thread to take responsibility about client
-		if (player == 1 && room != -1){
-			player1Runnable task1 = new player1Runnable(ports[room-1][0]);
+		if (player == 1 && room != -1) {
+			player1Runnable task1 = new player1Runnable(ports[room - 1][0]);
 			Thread player1 = new Thread(task1);
 			player1.start();
 		}
 		if (player == 2 && room != -1) {
-			player2Runnable task2 = new player2Runnable(ports[room-1][1]);
+			player2Runnable task2 = new player2Runnable(ports[room - 1][1]);
 			Thread player2 = new Thread(task2);
 			player2.start();
 		}
@@ -83,10 +84,10 @@ class player1Runnable implements Runnable {
 	DataOutputStream output = null;
 	private int port = 0;
 	boolean stateRoom = false;
-	
+
 	// Game variable
-	ArrayList<String> wordsPlay = new ArrayList<String>();
-	
+	static ArrayList<String> wordsPlay = new ArrayList<String>();
+
 	// Constructor
 	player1Runnable(int portUser) {
 		this.port = portUser;
@@ -100,73 +101,105 @@ class player1Runnable implements Runnable {
 			// Connect the server in the same socket by choosing ip of server and port
 			InetAddress localHost = InetAddress.getLocalHost();
 			String ipAddress = localHost.getHostAddress();
-			
+
 			socket = new Socket(ipAddress, port);
 			input = new DataInputStream(socket.getInputStream());
 			output = new DataOutputStream(socket.getOutputStream());
 			System.out.println("\tPlayer1 is ready ...");
-			
-			// ------------------In game-----------------------------	
+
+			// Receive the vocabulary from server
+			String vocab = "";
+			while (vocab.equals("end")) {
+				vocab = input.readUTF();
+				wordsPlay.add(vocab);
+			}
+			// GUI game
+			game guiPlay = new game();
+			guiPlay.addWords(wordsPlay);
+			int round = 1;
+			System.out.println("Player 1 received word sucessfully");
+			// ------------------In game-----------------------------
 			while (!stateRoom) {
-				
-				// Receive the vocabulary from server
-				String vocab = "";
-				while(vocab.equals("end")){
-					vocab = input.readUTF();
-					wordsPlay.add(vocab);
-				}
-				// GUI game
-				game guiPlay = new game();
-				guiPlay.addWords(wordsPlay);
-				
 				// (loop: play <-> wait)
 				boolean inPlaySection = true;
-				while(inPlaySection){
-					
+				while (inPlaySection) {
+
 					// Playing -> 1 letter
 					boolean playTurn = true;
-					while(playTurn){
-						String ans = guiPlay.getLetter();
-						output.writeUTF(ans);
-						
-						
-						
-						
+					while (playTurn) {
+
+						boolean waitingKeyBoard = true;
+						String keyboard = "";
+						int life = 0;
+						int score = 0;
+						while (waitingKeyBoard) {
+							while (true/* getKeyBoard */) {
+
+								/* ArrayList keyboard is not empty (break loop) */
+								// assign the variable keyboard here
+							}
+
+							// life = guiPlay.getlife() // get life
+							// score = guiPlay.getScore // get score
+						}
+						// Send all data to server, and server send to the player 2
+						// output.writeUTF(keyboard);
+						// output.writeInt(life);
+						// output.writeInt(score);
+						// playTurn = guiPlay.changeTurn()// changeTurn
 					}
-					
+
 					// Waiting
-					// waiting until receive "your turn"
 					boolean waitTurn = true;
-					while(waitTurn){
-						
+					while (waitTurn) {
+						String keyboard = "";
+						int life = 0;
+						int score = 0;
+						while (keyboard.equals("") || life == 0 || score == 0) {
+							// wait until get all data from player2 -> break loop
+							// keyboard = input.readline();
+							// life = input.readInt();
+							// score= input.readInt();
+						}
+						// set all data of player2
+						// guiPlay.setScore(); // set the score
+						// guiPlay.setLife(); // set the life
+						// guiPlay.addKeyBoardPlay();// set keyboard
+						// waitTurn = guiPlay.changeTurn();
 					}
-					
+
+//					if(// guiPlay.getRound == 4){
+//						break;
+//					}
+
 				}
-				
-				
-				
-				
-				
-				
+				// Close
+				socket.close();
+				input.close();
+				output.close();
 				stateRoom = true;
 			}
-
-			// Close
-			socket.close();
-			input.close();
-			output.close();
-
-
-
 		} catch (Exception error) {
 			System.out.println(error);
 			System.out.println("Player1's Runnable section");
 		}
 
 	}
+
 	private void closeRoom() {
 		this.stateRoom = true;
 	}
+
+	private static boolean checkLetter(int turn, String letter) {
+
+		String tmpWord = wordsPlay.get(turn - 1);
+
+		if (tmpWord.contains(tmpWord)) {
+			return true;
+		}
+		return false;
+	}
+
 }
 
 class player2Runnable implements Runnable {
@@ -176,9 +209,9 @@ class player2Runnable implements Runnable {
 	DataOutputStream output = null;
 	boolean stateRoom = false;
 	private int port = 0;
-	
+
 	// Game variable
-	ArrayList<String> wordsPlay = new ArrayList<String>();
+	static ArrayList<String> wordsPlay = new ArrayList<String>();
 
 	// Constructor
 	public player2Runnable(int port) {
@@ -192,74 +225,92 @@ class player2Runnable implements Runnable {
 			// IP Address
 			InetAddress localHost = InetAddress.getLocalHost();
 			String ipAddress = localHost.getHostAddress();
-			
+
 			// Create socket
 			socket = new Socket(ipAddress, port);
 			input = new DataInputStream(socket.getInputStream());
 			output = new DataOutputStream(socket.getOutputStream());
 			System.out.println("\tPlayer2 is ready ...");
-			
-			// ------------------In game-----------------------------		
+
+			// ------------------In game-----------------------------
+			// Receive the vocabulary from server
+			String tmp = "";
+			while (!tmp.equals("end")) {
+				tmp = input.readUTF();
+				wordsPlay.add(tmp);
+			}
+			// GUI game
+			game guiPlay = new game();
+			guiPlay.addWords(wordsPlay);
+			System.out.println("Player 2 received word sucessfully");
+
 			while (!stateRoom) {
-				
-				// Receive the vocabulary from server
-				String tmp = "";
-				while(!tmp.equals("end")){
-					tmp = input.readUTF();
-					wordsPlay.add(tmp);
-				}
-				// GUI game
-				game guiPlay = new game();
-				guiPlay.addWords(wordsPlay);
-				
 				// (loop: wait <-> play)
 				boolean inPlaySection = true;
-				while(inPlaySection){
+				while (inPlaySection) {
 
 					// Waiting
-					// waiting until receive "your turn"
 					boolean waitTurn = true;
-					while(waitTurn){
-						
-						
-						
-						
+					while (waitTurn) {
+						String keyboard = "";
+						int life = 0;
+						int score = 0;
+						while (keyboard.equals("") || life == 0 || score == 0) {
+							// wait until get all data from player1 -> break loop
+							// keyboard = input.readline();
+							// life = input.readInt();
+							// score = input.readInt();
+						}
+						// set all data of player1
+						// guiPlay.setScore(); // set the score
+						// guiPlay.setLife(); // set the life
+						// guiPlay.addKeyBoardPlay();// set keyboard
+
+						// waitTurn = guiPlay.changeTurn();
+
 					}
-					
-					// Playing -> 1 letter
 					boolean playTurn = false;
-					while(!playTurn){
-						
+					while (playTurn) {
+
+						boolean waitingKeyBoard = true;
+						String keyboard = "";
+						int life = 0;
+						int score = 0;
+						while (waitingKeyBoard) {
+							while (true/* getKeyBoard */) {
+
+								/* ArrayList keyboard is not empty (break loop) */
+								// assign the variable keyboard here
+							}
+
+							// life = guiPlay.getlife() // get life
+							// score = guiPlay.getScore // get score
+						}
+						// Send all data to server, and server send to the player 1
+						// output.writeUTF(keyboard);
+						// output.writeInt(life);
+						// output.writeInt(score);
+						// playTurn = guiPlay.changeTurn()// changeTurn
 					}
-					
+
+//					if(// guiPlay.getRound == 4){
+//						break;
+//					}
+
 				}
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
+				// Close
+				socket.close();
+				input.close();
+				output.close();
 				stateRoom = true;
 			}
-			// Close
-			socket.close();
-			input.close();
-			output.close();
 
-		}catch (Exception error) {
+		} catch (Exception error) {
 			System.out.println(error);
 			System.out.println("Player2's Runnable section");
 		}
 
 	}
-	 
 
 	private void closeRoom() {
 		this.stateRoom = true;

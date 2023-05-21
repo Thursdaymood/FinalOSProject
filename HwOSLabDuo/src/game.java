@@ -411,12 +411,14 @@ public class game extends JFrame implements ActionListener {
     // 		this.lifeOfPlayer2 +=1;
     // 	}
     	
+
     // };
     public int getScorePlay1() {
-        return scorePlayer1;
+        return this.scorePlayer1;
     }
+    
     public int getScorePlay2() {
-        return scorePlayer2;
+        return this.scorePlayer2;
     }
     public boolean checkLetter(boolean answer){
     	return answer;
