@@ -123,7 +123,7 @@ class player1Runnable implements Runnable {
 				
 			}
 			// GUI game
-			this.guiPlay = new game(wordsPlay);
+			this.guiPlay = new game(wordsPlay, 1);
 			guiPlay.setVisible();
 			System.out.println(wordsPlay.size());
 			int round = 1;
@@ -265,7 +265,7 @@ class player2Runnable implements Runnable {
 				
 			}
 			// GUI game
-			this.guiPlay = new game(wordsPlay);
+			this.guiPlay = new game(wordsPlay,2);
 			guiPlay.setVisible();
 			System.out.println("Player 2 received word sucessfully");
 

@@ -42,6 +42,7 @@ public class game extends JFrame implements ActionListener {
 	private ArrayList<String> listInput = new ArrayList<String>();
 	private JButton[] letterButtons;
 	private String answer = "";
+	private int who;
 
 	public static String hiddeWords(String word) {
 		String hiddenWord = "";
@@ -201,8 +202,9 @@ public class game extends JFrame implements ActionListener {
 		}
 	}
 
-	public game(ArrayList<String> tmp) {
+	public game(ArrayList<String> tmp, int whoPlayer) {
 		this.wordChallenge = tmp;
+		this.who = whoPlayer;
 		// init vars
 		letterButtons = new JButton[26];
 		customFont = createFont("HwOSLabDuo/resc/Raleway-SemiBold.ttf");
@@ -521,7 +523,7 @@ public class game extends JFrame implements ActionListener {
 		tmp.add("acct");
 		tmp.add("acr");
 
-		new game(tmp).setVisible(true);
+		new game(tmp,1).setVisible(true);
 	}
 
 }
