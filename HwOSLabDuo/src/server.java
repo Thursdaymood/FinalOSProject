@@ -24,7 +24,8 @@ public class server implements Runnable {
 	int playerNum;
 
 	int[][] ports = { { 2221, 2222 }, { 2223, 2224 }, { 2225, 2226 }, { 2227, 2228 } };
-	static ArrayList<String> wordRandom = new ArrayList<String>(5);
+	static ArrayList<String> wordRandom = new ArrayList<String>();
+
 	server(int room, int player) throws IOException {
 		this.roomNum = room;
 		this.playerNum = player;
@@ -32,18 +33,18 @@ public class server implements Runnable {
 
 	@Override
 	public void run() {
-		System.out.println("\tRoom "+roomNum+" is ready");
+		System.out.println("\tRoom " + roomNum + " is ready");
 		randomWords(); // Generate 1 set of vocabulary
 
 		// ------------------------Connection-----------------------------------------------------
 		boolean allPlayerConnect = false;
 		boolean player1Connect = false;
 		boolean player2Connect = false;
-		while (!allPlayerConnect) {	
+		while (!allPlayerConnect) {
 			try {
-				if(playerNum ==1){
+				if (playerNum == 1) {
 					while (!player1Connect) {
-						ServerSocket  serverA = new ServerSocket(ports[roomNum - 1][0]);
+						ServerSocket serverA = new ServerSocket(ports[roomNum - 1][0]);
 						try {
 							socketA = serverA.accept();
 							setPlayerNum(2);
@@ -55,7 +56,7 @@ public class server implements Runnable {
 				}
 				System.out.println("Waiting player2");
 				while (!player2Connect) {
-					ServerSocket  serverB = new ServerSocket(ports[roomNum - 1][1]);
+					ServerSocket serverB = new ServerSocket(ports[roomNum - 1][1]);
 					try {
 						socketB = serverB.accept();
 
@@ -73,56 +74,85 @@ public class server implements Runnable {
 			System.out.println("Players are ready");
 			allPlayerConnect = true;
 		}
-		
-		
-		//-------------------------In game------------------------
+
+		// -------------------------In game------------------------
 		boolean stateGame = false;
-		String sentMessage;
-		String receivedMessage;
-		while(!stateGame) {
-			
-			try{
+		while (!stateGame) {
+
+			try {
 				// Create the input & output socket
+				// player1
 				DataInputStream inputA = new DataInputStream(socketA.getInputStream());
 				DataOutputStream outputA = new DataOutputStream(socketA.getOutputStream());
-				
+				// player2
 				DataInputStream inputB = new DataInputStream(socketB.getInputStream());
 				DataOutputStream outputB = new DataOutputStream(socketB.getOutputStream());
 
 				// Send the set of vocabulary
-				for(int i = 0 ; i < wordRandom.size() ; i++){
+				for (int i = 0; i < wordRandom.size(); i++) {
 					outputA.writeUTF(wordRandom.get(i));
 					outputB.writeUTF(wordRandom.get(i));
 				}
 				outputA.writeUTF("end");
 				outputB.writeUTF("end");
 				// (loop: play -> wait)
-				// (receive word -> check the word -> return correct/wrong -> return "your turn" to player2)
+				
 				boolean inPlaySection = true;
-				while(inPlaySection){
-					
+				int round = 1;
+				while (inPlaySection) {
+
+					// player1
+					if (round % 2 != 0) {
+						
+						String keyboard = "";
+						int life = 0;
+						int score = 0;
+						// waiting the data from player1
+						while(score == 0 || life  == 0 || keyboard.equals("")) {
+							
+							keyboard = inputA.readLine();
+							life = inputA.readInt();
+							score = inputA.readInt();
+						}
+						// send to player2
+						outputB.writeUTF(keyboard);
+						outputB.writeInt(life);
+						outputB.writeInt(score);
+						round++;
+					}
+					// player 2
+					if (round % 2 == 0) {
+						
+						String keyboard = "";
+						int life = 0;
+						int score = 0;
+						// waiting the data from player2
+						while(score == 0 || life  == 0 || keyboard.equals("")) {
+							// keyboard = inputB.readLine();
+							// life = inputB.readLine();
+							// score = inputB.readLine();
+						}
+						// send to player1
+						//outputA.writeUTF(keyboard);
+						//outputA.writeInt(life);
+						//outputA.writeInt(score);
+
+						round++;
+					}
+
 				}
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
+
 				stateGame = true;
-			// The end of try catch block	
-			}catch(Exception error) {
+				// The end of try catch block
+			} catch (Exception error) {
 				System.out.println(error);
 				System.out.println("In-game section");
 			}
 
-			
 		}
-		
+
 	}
+
 	// Random word in gameFile and insert it in woed_random
 	private static void randomWords() {
 		Random ran = new Random();
@@ -154,17 +184,17 @@ public class server implements Runnable {
 		}
 
 	}
-	
+
 	private static boolean checkLetterServer(int turn, String letter) {
-		
-		String tmpWord = wordRandom.get(turn-1);
-		
-		if(tmpWord.contains(tmpWord)){
+
+		String tmpWord = wordRandom.get(turn - 1);
+
+		if (tmpWord.contains(tmpWord)) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	private void setPlayerNum(int tmp) {
 		this.playerNum = tmp;
 	}

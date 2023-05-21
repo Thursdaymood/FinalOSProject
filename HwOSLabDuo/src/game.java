@@ -431,20 +431,44 @@ public class game extends JFrame implements ActionListener {
     // 		this.lifeOfPlayer2 +=1;
     // 	}
     	
+
     // };
-    public int getScorePlay1() {
-        return this.scorePlayer1;
+ 
+    public int getScorePlayer(int player) {
+    	if(player == 1){
+    		return this.scorePlayer1;
+    	}else{
+    		return this.scorePlayer2;
+    	}
     }
-    public int getScorePlay2() {
-        return this.scorePlayer2;
+    
+    public int getLifePlayer(int player) {
+    	if(player == 1){
+    		return this.lifeOfPlayer1;
+    	}else{
+    		return this.lifeOfPlayer2;
+    	}
     }
-    public int getLifeOfPlayer1() {
-        return this.lifeOfPlayer1;
+    public void setScorePlayer(int player, int num){
+    	if(player ==1){
+    		this.scorePlayer1 = num;
+    	}
+    	if(player == 2){
+    		this.scorePlayer2 = num;
+    	}
     }
-    public int getLifeOfPlayer2() {
-        return this.lifeOfPlayer2;
+    public void setLifeOfPlayer(int player, int num){
+    	if(player ==1){
+    		this.lifeOfPlayer1 = num;
+    	}
+    	if(player == 2){
+    		this.lifeOfPlayer2 = num;
+    	}
     }
-    //get listInput
+    
+    public ArrayList<String> getKeyBoard() {
+    	return this.listInput;
+    }
 
     public boolean checkLetter(boolean answer){
     	return answer;
