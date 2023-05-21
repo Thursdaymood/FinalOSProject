@@ -117,7 +117,7 @@ class player1Runnable implements Runnable {
 				if(tmp.equals("end")){
 					break;
 				}else {
-					System.out.println("Player1 got "+tmp);
+					//System.out.println("Player1 got "+tmp);
 					wordsPlay.add(tmp);
 				}
 				
@@ -256,7 +256,7 @@ class player2Runnable implements Runnable {
 			boolean receiveVocab = true;
 			while (receiveVocab){
 				String tmp = input.readUTF();
-				System.out.println("Player2 got "+tmp);
+				//System.out.println("Player2 got "+tmp);
 				if(tmp.equals("end")){
 					break;
 				}else {
