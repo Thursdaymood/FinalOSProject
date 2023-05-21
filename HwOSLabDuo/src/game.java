@@ -19,15 +19,15 @@ import java.awt.Graphics2D;
  * ส่งผลการกดแป้นพิมพ์
  * give up เปลี่ยนเป็นอย่างอื่น
  * life round
+ * arraylistเก็บcommand
  */
 
 public class game extends JFrame implements ActionListener {
 
     //store wordChallenge export form server
     private ArrayList<String> wordChallenge = new ArrayList<String>();
-    private roomServer server;
     private String word ; //แก้การเข้าถึงกำหนดindex
-    private int host,roomId,
+    private int roomId,
                 lifeOfPlayer1 = 5 , 
                 lifeOfPlayer2 = 5 ,
                 scorePlayer1 = 0,
@@ -45,6 +45,7 @@ public class game extends JFrame implements ActionListener {
     static Color PRIMARY_COLOR = Color.WHITE;
     static Color SECONDARY_COLOR = Color.decode("#FCA311");
     private Font customFont;
+    private ArrayList<String> listInput = new ArrayList<String>();
     private JButton[] letterButtons;
     private String answer = "";
 
@@ -116,9 +117,10 @@ public class game extends JFrame implements ActionListener {
         int pos_x = margin;
         JLabel heart = new JLabel("Life: "+ life);
         heart.setFont(customFont.deriveFont(20f));
+        heart.setForeground(TEXT_COLOR);
         heart.setBounds(pos_x, 65 + ((HEIGHT/2-30)), 120,30);
         getContentPane().add(heart);
-        
+
         revalidate();
         repaint();
 
@@ -310,6 +312,8 @@ public class game extends JFrame implements ActionListener {
             System.out.println();
             
         } else {
+            listInput.add(command);
+            System.out.println("Input: "+listInput);
             if (word.contains(command.toLowerCase())) {
                 button.setBackground(Color.cyan);
                 
@@ -355,8 +359,6 @@ public class game extends JFrame implements ActionListener {
             }
         }
         // finish round check who win.
-        System.out.println("word length: "+word.length());
-        System.out.println("Count: "+count);
         if (count == word.length() && round != 4) {
             ++round;
             count = 0;
@@ -380,7 +382,9 @@ public class game extends JFrame implements ActionListener {
             
         } else {
             turn = 1;
-        }displayTurn();
+        }
+        displayTurn();
+        listInput.clear();
         
 
     }
@@ -406,16 +410,16 @@ public class game extends JFrame implements ActionListener {
     	
     // };
     public int getScorePlay1() {
-        return scorePlayer1;
+        return this.scorePlayer1;
     }
     public int getScorePlay2() {
-        return scorePlayer2;
+        return this.scorePlayer2;
     }
     public int getLifeOfPlayer1() {
-        return lifeOfPlayer1;
+        return this.lifeOfPlayer1;
     }
     public int getLifeOfPlayer2() {
-        return lifeOfPlayer2;
+        return this.lifeOfPlayer2;
     }
     public boolean checkLetter(boolean answer){
     	return answer;
