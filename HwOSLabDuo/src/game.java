@@ -27,7 +27,7 @@ public class game extends JFrame implements ActionListener {
 	private String word; // แก้การเข้าถึงกำหนดindex
 	private int roomId, lifeOfPlayer1 = 5, lifeOfPlayer2 = 5, scorePlayer1 = 0, scorePlayer2 = 0, count = 0;
 	private JLabel hiddeWordsLabel, play1, play2, roundLabel, displayScore1, displayScore2, turnLabel, life1, life2,
-			resultMessage;
+			resultMessage,space;
 
 	private int round = 0, turn = 1;
 	private final int WIDTH = 800;
@@ -42,7 +42,9 @@ public class game extends JFrame implements ActionListener {
 	private ArrayList<String> listInput = new ArrayList<String>();
 	private JButton[] letterButtons;
 	private String answer = "";
-	private int who;
+	private int who,winner;
+	private Boolean receiveInput = true;
+
 
 	public static String hiddeWords(String word) {
 		String hiddenWord = "";
@@ -167,23 +169,37 @@ public class game extends JFrame implements ActionListener {
 		repaint();
 	}
 
-	public void createResultDialog() {
-		JDialog resuleDialog = new JDialog();
-		resuleDialog.setSize(300, 200);
-		resuleDialog.getContentPane().setBackground(BACKGROUND);
-		resuleDialog.setForeground(TEXT_COLOR);
-		resuleDialog.setLocationRelativeTo(null);
-		resuleDialog.setVisible(true);
+	public void createResultDialog(int player) {
+		JDialog resultDialog = new JDialog();
+		resultDialog.setSize(300, 200);
+		resultDialog.getContentPane().setBackground(BACKGROUND);
+		resultDialog.setForeground(TEXT_COLOR);
+		resultDialog.setLocationRelativeTo(null);
+		resultDialog.setResizable(false);
+		resultDialog.setLayout(new GridLayout(4, 1));
+		resultDialog.setVisible(true);
 
-		resultMessage = new JLabel("Hello, world!");
+		resultMessage = new JLabel("PLAYER "+ player +" WIN");
+		if (player == 3) {
+			resultMessage.setText("Due");
+		}
+		resultMessage.setFont(customFont.deriveFont(20f));
 		resultMessage.setForeground(TEXT_COLOR);
+		resultMessage.setHorizontalAlignment(SwingConstants.CENTER);
 
-		JButton resulButton = new JButton();
-		resulButton.setForeground(BACKGROUND);
-		resulButton.addActionListener(this);
+		space = new JLabel();
+        space.setForeground(Color.WHITE);
+        space.setHorizontalAlignment(SwingConstants.CENTER);
 
-		resuleDialog.add(resultMessage);
-		resuleDialog.add(resulButton);
+		JButton resultButton = new JButton("EXIT");
+		resultButton.setForeground(BACKGROUND);
+        resultButton.setBackground(PRIMARY_COLOR);
+        resultButton.addActionListener(this);
+
+		resultDialog.add(space);
+		resultDialog.add(resultMessage);
+		resultDialog.add(space);
+		resultDialog.add(resultButton);
 
 	}
 
@@ -207,9 +223,12 @@ public class game extends JFrame implements ActionListener {
 		this.who = whoPlayer;
 		// init vars
 		letterButtons = new JButton[26];
-		customFont = createFont("HwOSLabDuo/resc/Raleway-SemiBold.ttf");
+		customFont = createFont("resc/Raleway-SemiBold.ttf");
 		word = wordChallenge.get(round);
-		createResultDialog();
+
+		//start game
+		createroom();
+		addGuiComponents();
 
 	}
 
@@ -387,17 +406,18 @@ public class game extends JFrame implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
+		
 		// disable button
 		JButton button = (JButton) e.getSource();
 		button.setEnabled(false);
 
-		if (command.equals("give up")) {
+		if (command.equals("EXIT")) {
 			System.out.println("Stop");
-			System.out.println();
-			System.out.println();
+			System.exit(0);
 
 		} else {
-			listInput.add(command);
+			if (receiveInput) {
+				listInput.add(command);
 			System.out.println("Input: " + listInput);
 			if (word.contains(command.toLowerCase())) {
 				button.setBackground(Color.cyan);
@@ -429,7 +449,7 @@ public class game extends JFrame implements ActionListener {
 					}
 
 				}
-				// update hiddenWordLabel
+				// update hiddenspace
 				hiddeWordsLabel.setText(String.valueOf(hiddenWord));
 				System.out.println(hiddenWord);
 
@@ -443,6 +463,8 @@ public class game extends JFrame implements ActionListener {
 				}
 				button.setBackground(Color.PINK);
 			}
+			}
+			
 		}
 		// finish round check who win.
 		System.out.println("round: " + round);
@@ -455,15 +477,24 @@ public class game extends JFrame implements ActionListener {
 				System.out.println("FINISH");
 				resetGame();
 			} else {
+				receiveInput = false;
 				if (scorePlayer1 > scorePlayer2) {
+					winner = 1 ;
 					System.out.println("Player1");
 				} else if (scorePlayer1 < scorePlayer2) {
+					winner = 2;
 					System.out.println("Player2");
 				}
+				else{
+					winner = 3 ;
+					System.out.println("Due");
+				}
 				System.out.println("End Game..........");
+				createResultDialog(winner);
 			}
 
 		}
+
 
 		// set turn
 		if (turn == 1) {
