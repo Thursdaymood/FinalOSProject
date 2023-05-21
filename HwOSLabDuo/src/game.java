@@ -203,8 +203,10 @@ public class game extends JFrame implements ActionListener {
         }
 
         //update life
-        life1.setText("Life: "+ 5);
-        life1.setText("Life: "+ 5);
+        lifeOfPlayer1 = 5;
+        lifeOfPlayer2 = 5;
+        life1.setText("Life: "+ lifeOfPlayer1);
+        life2.setText("Life: "+ lifeOfPlayer2);
 
     }
 
@@ -373,18 +375,28 @@ public class game extends JFrame implements ActionListener {
             }
         }
         // finish round check who win.
-        if (count == word.length() || lifeOfPlayer1 < 1 || lifeOfPlayer2 < 1 && round <= 4) {
-            ++round;
-            count = 0;
-            displayRound();
-            lifeOfPlayer1 = 5;
-            lifeOfPlayer2 = 5;
-            life1.setText("command");
+        System.out.println("round: "+round);
+        if (count == word.length()) {
+            if (round < 4 ) {
+                ++round;
+                count = 0;
+                displayRound();
+                System.out.println("Turn "+ round);
+                System.out.println("FINISH");
+                resetGame();
+            }
+            else{
+                if (scorePlayer1 > scorePlayer2) {
+                    System.out.println("Player1");
+                }
+                else if (scorePlayer1 < scorePlayer2){
+                    System.out.println("Player2");
+                }
+                System.out.println("End Game..........");
+            }
             
-            System.out.println("Turn "+ round);
-            System.out.println("FINISH");
-            resetGame();
         }
+
  
 
         
