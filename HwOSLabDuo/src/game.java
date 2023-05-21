@@ -114,18 +114,11 @@ public class game extends JFrame implements ActionListener {
     }
     private void displayHeart2(int life){
         int pos_x = margin;
+        JLabel heart = new JLabel("Life: "+ life);
+        heart.setFont(customFont.deriveFont(20f));
+        heart.setBounds(pos_x, 65 + ((HEIGHT/2-30)), 120,30);
+        getContentPane().add(heart);
         
-        for (int i = 0; i < life; i++) {
-            JLabel heart = new JLabel("Life: "+ life);
-            heart.setBounds(pos_x, 65 + ((HEIGHT/2-30)), size_heart, size_heart);
-            getContentPane().add(heart);
-            for (int j = 0; j < 3-life; j++) {
-                getContentPane().remove(heart);
-            }
-            
-
-            pos_x += size_heart+10;
-         }
         revalidate();
         repaint();
 
@@ -417,6 +410,12 @@ public class game extends JFrame implements ActionListener {
     }
     public int getScorePlay2() {
         return scorePlayer2;
+    }
+    public int getLifeOfPlayer1() {
+        return lifeOfPlayer1;
+    }
+    public int getLifeOfPlayer2() {
+        return lifeOfPlayer2;
     }
     public boolean checkLetter(boolean answer){
     	return answer;
