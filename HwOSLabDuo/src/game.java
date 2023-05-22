@@ -232,7 +232,7 @@ public class game extends JFrame implements ActionListener {
 
 		// init vars
 		letterButtons = new JButton[26];
-		customFont = createFont("resc/Mali-SemiBoldItalic.ttf"); //"HwOSLabDuo/resc/Mali-SemiBoldItalic.ttf"
+		customFont = createFont("HwOSLabDuo/resc/Mali-SemiBoldItalic.ttf"); //"resc/Mali-SemiBoldItalic.ttf"
 		word = wordChallenge.get(round);
 
 		//start game
@@ -303,7 +303,7 @@ public class game extends JFrame implements ActionListener {
 		hiddeWordsLabel = new JLabel(hiddeWords(word));
 		hiddeWordsLabel.setFont(customFont.deriveFont(60f));
 		hiddeWordsLabel.setForeground(TEXT_COLOR);
-		hiddeWordsLabel.setBounds(WIDTH / 2 - hiddeWordsLabel.getWidth() / 2, (HEIGHT - 160) / 2, WIDTH - 190, 100);
+		hiddeWordsLabel.setBounds(WIDTH / 2 - hiddeWordsLabel.getWidth() / 2-100, (HEIGHT - 160) / 2, WIDTH - 190, 100);
 
 		// layout
 		GridLayout gridLayout = new GridLayout(3, 9);
