@@ -14,7 +14,7 @@ public class client {
 	int[][] ports = { { 2221, 2222 }, { 2223, 2224 }, { 2225, 2226 }, { 2227, 2228 } };
 
 	// Constructor
-	public client(int player, int room) {
+	public client(int player, int room){
 
 		// Create thread to take responsibility about client
 		if (player == 1 && room != -1) {

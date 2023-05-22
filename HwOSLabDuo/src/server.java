@@ -95,19 +95,8 @@ public class server implements Runnable {
 				}
 				outputA.writeUTF("end");
 				outputB.writeUTF("end");
-				ArrayList<String> tmp = new ArrayList<String>();
-				// Waiting for receive who is winner both side
-				String messageA = "";
-				String messageB = "";
-				while(messageA.equals("") || messageB.equals("")) {
-					System.out.println("Oh (Server)");
-					messageA = inputA.readUTF();
-					messageB = inputB.readUTF();
-				}
 				
-				tmp.add(messageB);
-				tmp.add(messageA);
-				Winner.add(tmp);
+	
 				System.out.println("Complete (Server)");
 				// The end of try catch block
 			} catch (Exception error) {

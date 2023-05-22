@@ -165,7 +165,7 @@ class introFrame {
 
 
 		// Game's name
-		JLabel name = new JLabel("// NAME //");
+		JLabel name = new JLabel("Hangman");
 		name.setOpaque(false);
 		name.setFont(getExternalFont20("resc/Raleway-Bold.ttf"));
 		name.setForeground(Color.black); // font color
