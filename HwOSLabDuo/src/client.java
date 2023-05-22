@@ -105,11 +105,6 @@ class player1Runnable implements Runnable {
 			int round = 1;
 			System.out.println("Player 1 received word sucessfully");
 
-			// Close
-			socket.close();
-			input.close();
-			output.close();
-			stateRoom = true;
 
 		} catch (Exception error) {
 			System.out.println(error);
