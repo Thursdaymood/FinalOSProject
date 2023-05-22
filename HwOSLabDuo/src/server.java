@@ -97,17 +97,18 @@ public class server implements Runnable {
 				outputB.writeUTF("end");
 				ArrayList<String> tmp = new ArrayList<String>();
 				// Waiting for receive who is winner both side
-				String message = "";
-				while(true){
-					message = inputA.readUTF();
-					message = inputB.readUTF();
-					if(message.equals("Player1") ||message.equals("Player2")){
-						tmp.add(message);
-						System.out.println(message);
-						break;
-					}
+				String messageA = "";
+				String messageB = "";
+				while(messageA.equals("") || messageB.equals("")) {
+					System.out.println("Oh (Server)");
+					messageA = inputA.readUTF();
+					messageB = inputB.readUTF();
 				}
+				
+				tmp.add(messageB);
+				tmp.add(messageA);
 				Winner.add(tmp);
+				System.out.println("Complete (Server)");
 				// The end of try catch block
 			} catch (Exception error) {
 				System.out.println(error);
@@ -132,14 +133,14 @@ public class server implements Runnable {
 				int tmpNum = ran.nextInt(834) + 1; // generate new number
 				scan = new Scanner(file); // must create a new one before start loop
 
-				while (scan.hasNextLine()) {					
+				while (scan.hasNextLine()) {
 					line = scan.nextLine();
 					count++;
 					if (count == tmpNum) {
-						//System.out.println(line);
+						// System.out.println(line);
 						tmpList.add(line);
 					}
-					
+
 				}
 				// System.out.println(i+": "+tmpNum); //details
 
@@ -165,7 +166,5 @@ public class server implements Runnable {
 	private void setPlayerNum(int tmp) {
 		this.playerNum = tmp;
 	}
-
-
 
 }
