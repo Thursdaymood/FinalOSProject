@@ -232,7 +232,7 @@ public class game extends JFrame implements ActionListener {
 
 		// init vars
 		letterButtons = new JButton[26];
-		customFont = createFont("resc/Mali-SemiBoldItalic.ttf"); //"HwOSLabDuo/resc/Mali-SemiBoldItalic.ttf"
+		customFont = createFont("HwOSLabDuo/resc/Mali-SemiBoldItalic.ttf"); //"resc/Mali-SemiBoldItalic.ttf"
 		word = wordChallenge.get(round);
 
 		//start game
@@ -303,7 +303,7 @@ public class game extends JFrame implements ActionListener {
 		hiddeWordsLabel = new JLabel(hiddeWords(word));
 		hiddeWordsLabel.setFont(customFont.deriveFont(60f));
 		hiddeWordsLabel.setForeground(TEXT_COLOR);
-		hiddeWordsLabel.setBounds(WIDTH / 2 - hiddeWordsLabel.getWidth() / 2, (HEIGHT - 160) / 2, WIDTH - 190, 100);
+		hiddeWordsLabel.setBounds(WIDTH / 2 - hiddeWordsLabel.getWidth() / 2-100, (HEIGHT - 160) / 2, WIDTH - 190, 100);
 
 		// layout
 		GridLayout gridLayout = new GridLayout(3, 9);
@@ -376,9 +376,6 @@ public class game extends JFrame implements ActionListener {
 			return this.scorePlayer2;
 		}
 	}
-	public int getWinner() {
-		return this.winner;
-	}
 
 	public int getLifePlayer(int player) {
 		if (player == 1) {
@@ -420,6 +417,7 @@ public class game extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		System.out.println(wordChallenge);
 		String command = e.getActionCommand();
 		
 		// disable button
@@ -428,6 +426,8 @@ public class game extends JFrame implements ActionListener {
 
 		if (command.equals("EXIT")) {
 			System.out.println("Stop");
+			System.out.println(winner);
+			System.out.println("winner"+getWinner());
 			System.exit(0);
 
 		} else {
@@ -561,6 +561,9 @@ public class game extends JFrame implements ActionListener {
 
 	public void setVisible() {
 		this.setVisible(true);
+	}
+	public int getWinner() {
+		return this.winner;
 	}
 
 	public static void main(String[] args) {

@@ -51,6 +51,30 @@ public class client {
 // The the end of client class	
 }
 
+class playFrame {
+
+	// Picture
+	private ImageIcon imageIcon = new ImageIcon("HwOSLabDuo/resc/idea.png");//resc//idea.png
+	private ImageIcon bg = new ImageIcon("HwOSLabDuo/resc/skyPixel.gif");//resc//pixelSky.gif
+
+	// Structure
+	private JFrame frame;
+	private JLabel labelMain;
+	private static final int WIDTH = 800;
+	private static final int HEIGHT = 250;
+
+	// Constructor
+	playFrame() {
+
+		playGUI();
+	}
+
+	private void playGUI() {
+
+	}
+
+}
+
 // About thread
 class player1Runnable implements Runnable {
 

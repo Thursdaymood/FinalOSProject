@@ -112,7 +112,7 @@ public class server implements Runnable {
 	private static ArrayList<String> randomWords() {
 		Random ran = new Random();
 		ArrayList<String> tmpList = new ArrayList<String>();
-		File file = new File("resc\\miniVocab.txt");
+		File file = new File("HwOSLabDuo/resc/miniVocab.txt");
 		String line;
 		Scanner scan;
 		try {
