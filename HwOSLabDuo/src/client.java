@@ -92,7 +92,7 @@ class player1Runnable implements Runnable {
 	// Constructor
 	player1Runnable(int portUser) {
 		this.port = portUser;
-		
+
 	}
 
 	@Override
@@ -111,91 +111,30 @@ class player1Runnable implements Runnable {
 
 			// Receive the vocabulary from server
 			boolean receiveVocab = true;
-			while (receiveVocab){
+			while (receiveVocab) {
 				String tmp = input.readUTF();
-				
-				if(tmp.equals("end")){
+
+				if (tmp.equals("end")) {
 					break;
-				}else {
-					//System.out.println("Player1 got "+tmp);
+				} else {
+					// System.out.println("Player1 got "+tmp);
 					wordsPlay.add(tmp);
 				}
-				
+
 			}
+			// ------------------In game-----------------------------
 			// GUI game
-			this.guiPlay = new game(wordsPlay, 1);
+			this.guiPlay = new game(wordsPlay, output, 1);
 			guiPlay.setVisible();
-			System.out.println(wordsPlay.size());
 			int round = 1;
 			System.out.println("Player 1 received word sucessfully");
-			// ------------------In game-----------------------------
-			while (!stateRoom) {
-				// (loop: play <-> wait)
-				boolean inPlaySection = true;
-				while (inPlaySection) {
 
-					// Playing -> 1 letter
-					boolean playTurn = true;
-					while (playTurn) {
+			// Close
+			socket.close();
+			input.close();
+			output.close();
+			stateRoom = true;
 
-						boolean waitingKeyBoard = true;
-						String keyboard = "";
-						int life = 0;
-						int score = 0;
-						System.out.println("Waiting player1 click");
-						while (waitingKeyBoard) {
-							while (true/* getKeyBoard */) {
-								boolean isEmpty = guiPlay.getKeyBoard().isEmpty();
-								if(!isEmpty){
-									keyboard = guiPlay.getKeyBoard().get(0);
-									break;
-								}
-								
-							}
-							
-							life = guiPlay.getLifePlayer(1); // get life
-							score = guiPlay.getScorePlayer(1); // get score
-							waitingKeyBoard = false;
-						}
-						System.out.println("Record player1");
-						// Send all data to server, and server send to the player 2
-						output.writeUTF(keyboard);
-						output.writeInt(life);
-						output.writeInt(score);
-						playTurn = guiPlay.changeTurn();// changeTurn
-					}
-
-					// Waiting
-					boolean waitTurn = true;
-					while (waitTurn) {
-						String keyboard = "";
-						int life = 0;
-						int score = 0;
-						System.out.println("Waiting player2 play");
-						while (keyboard.equals("") || life == 0 || score == 0) {
-							// wait until get all data from player2 -> break loop
-							keyboard = input.readLine();
-							life = input.readInt();
-							score= input.readInt();
-						}
-						// set all data of player2
-						guiPlay.setScorePlayer(2, score); // set the score
-						guiPlay.setLifeOfPlayer(2,life); // set the life
-						// guiPlay.addKeyBoardPlay();// set keyboard
-						waitTurn = guiPlay.changeTurn();
-					}
-
-//					if(// guiPlay.getRound == 4){
-//						break;
-//					}
-
-				}
-				// Close
-				socket.close();
-				input.close();
-				output.close();
-				stateRoom = true;
-			}
 		} catch (Exception error) {
 			System.out.println(error);
 			System.out.println("Player1's Runnable section");
@@ -234,7 +173,6 @@ class player2Runnable implements Runnable {
 	// Constructor
 	public player2Runnable(int port) {
 		this.port = port;
-		
 
 	}
 
@@ -254,86 +192,20 @@ class player2Runnable implements Runnable {
 			// ------------------In game-----------------------------
 			// Receive the vocabulary from server
 			boolean receiveVocab = true;
-			while (receiveVocab){
+			while (receiveVocab) {
 				String tmp = input.readUTF();
-				//System.out.println("Player2 got "+tmp);
-				if(tmp.equals("end")){
+				// System.out.println("Player2 got "+tmp);
+				if (tmp.equals("end")) {
 					break;
-				}else {
+				} else {
 					wordsPlay.add(tmp);
 				}
-				
+
 			}
 			// GUI game
-			this.guiPlay = new game(wordsPlay,2);
+			this.guiPlay = new game(wordsPlay, output, 2);
 			guiPlay.setVisible();
 			System.out.println("Player 2 received word sucessfully");
-
-			while (!stateRoom) {
-				// (loop: wait <-> play)
-				boolean inPlaySection = true;
-				while (inPlaySection) {
-
-					// Waiting
-					boolean waitTurn = true;
-					while (waitTurn) {
-						String keyboard = "";
-						int life = 0;
-						int score = 0;
-						System.out.println("Waiting player1 play");
-						while (keyboard.equals("") || life == 0 || score == 0) {
-							// wait until get all data from player1 -> break loop
-							keyboard = input.readLine();
-							life = input.readInt();
-							score = input.readInt();
-						}
-						// set all data of player1
-						guiPlay.setScorePlayer(1, score); // set the score
-						guiPlay.setLifeOfPlayer(1, life); // set the life
-						// guiPlay.addKeyBoardPlayer();// set keyboard
-
-						waitTurn = guiPlay.changeTurn();
-
-					}
-					boolean playTurn = false;
-					while (playTurn) {
-
-						boolean waitingKeyBoard = true;
-						String keyboard = "";
-						int life = 0;
-						int score = 0;
-						System.out.println("Waiting player1 click");
-						while (waitingKeyBoard) {
-							while (true/* getKeyBoard */) {
-								boolean isEmpty = guiPlay.getKeyBoard().isEmpty();
-								if(!isEmpty){
-									keyboard = guiPlay.getKeyBoard().get(0);
-									break;
-								}
-							}
-							life = guiPlay.getLifePlayer(2); // get life
-							score = guiPlay.getScorePlayer(2); // get score
-							waitingKeyBoard = false;
-						}
-						System.out.println("Record player2");
-						// Send all data to server, and server send to the player 1
-						output.writeUTF(keyboard);
-						output.writeInt(life);
-						output.writeInt(score);
-						playTurn = guiPlay.changeTurn();// changeTurn
-					}
-
-//					if(// guiPlay.getRound == 4){
-//						break;
-//					}
-
-				}
-				// Close
-				socket.close();
-				input.close();
-				output.close();
-				stateRoom = true;
-			}
 
 		} catch (Exception error) {
 			System.out.println(error);

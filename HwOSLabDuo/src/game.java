@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,6 +45,8 @@ public class game extends JFrame implements ActionListener {
 	private String answer = "";
 	private int who,winner;
 	private Boolean receiveInput = true;
+	
+	DataOutputStream output;
 
 
 	public static String hiddeWords(String word) {
@@ -218,12 +221,18 @@ public class game extends JFrame implements ActionListener {
 		}
 	}
 
-	public game(ArrayList<String> tmp, int whoPlayer) {
+	public game(ArrayList<String> tmp, DataOutputStream output,int whoPlayer) {
 		this.wordChallenge = tmp;
 		this.who = whoPlayer;
+		this.output = output;
+		
+		for(int i = 0 ; i < wordChallenge.size() ; i++){
+			System.out.println(wordChallenge.get(i));
+		}
+
 		// init vars
 		letterButtons = new JButton[26];
-		customFont = createFont("HwOSLabDuo/resc/Mali-SemiBoldItalic.ttf");
+		customFont = createFont("resc/Mali-SemiBoldItalic.ttf"); //"HwOSLabDuo/resc/Mali-SemiBoldItalic.ttf"
 		word = wordChallenge.get(round);
 
 		//start game
@@ -375,6 +384,9 @@ public class game extends JFrame implements ActionListener {
 			return this.lifeOfPlayer2;
 		}
 	}
+	public int getRound() {
+		return this.round;
+	}
 
 	public void setScorePlayer(int player, int num) {
 		if (player == 1) {
@@ -484,9 +496,19 @@ public class game extends JFrame implements ActionListener {
 				if (scorePlayer1 > scorePlayer2) {
 					winner = 1 ;
 					System.out.println("Player1");
+					try {
+						output.writeUTF("Player1");
+					} catch (IOException e1) {
+						System.out.println(e1);
+					}
 				} else if (scorePlayer1 < scorePlayer2) {
 					winner = 2;
 					System.out.println("Player2");
+					try {
+						output.writeUTF("Player2");
+					} catch (IOException e1) {
+						System.out.println(e1);
+					}
 				}
 				else{
 					winner = 3 ;
@@ -553,7 +575,7 @@ public class game extends JFrame implements ActionListener {
 		tmp.add("acct");
 		tmp.add("acr");
 
-		new game(tmp,1).setVisible(true);
+		// new game(tmp,1).setVisible(true);
 	}
 
 }

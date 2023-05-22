@@ -25,6 +25,7 @@ public class server implements Runnable {
 
 	int[][] ports = { { 2221, 2222 }, { 2223, 2224 }, { 2225, 2226 }, { 2227, 2228 } };
 	static ArrayList<String> wordRandom = new ArrayList<String>();
+	ArrayList<ArrayList<String>> Winner = new ArrayList<ArrayList<String>>();
 
 	server(int room, int player) throws IOException {
 		this.roomNum = room;
@@ -94,57 +95,19 @@ public class server implements Runnable {
 				}
 				outputA.writeUTF("end");
 				outputB.writeUTF("end");
-				// (loop: play -> wait)
-				
-				boolean inPlaySection = true;
-				int round = 1;
-				while (inPlaySection) {
-					System.out.println("Round: "+ round);
-					// player1
-					if (round % 2 != 0) {
-						
-						String keyboard = "";
-						int life = 0;
-						int score = 0;
-						// waiting the data from player1
-						while(score == 0 || life  == 0 || keyboard.equals("")) {
-							
-							keyboard = inputA.readLine();
-							life = inputA.readInt();
-							score = inputA.readInt();
-						}
-						// send to player2
-						outputB.writeUTF(keyboard);
-						outputB.writeInt(life);
-						outputB.writeInt(score);
-						round++;
+				ArrayList<String> tmp = new ArrayList<String>();
+				// Waiting for receive who is winner both side
+				String message = "";
+				while(true){
+					message = inputA.readUTF();
+					message = inputB.readUTF();
+					if(message.equals("Player1") ||message.equals("Player2")){
+						tmp.add(message);
+						System.out.println(message);
+						break;
 					}
-					// player 2
-					if (round % 2 == 0) {
-						
-						String keyboard = "";
-						int life = 0;
-						int score = 0;
-						// waiting the data from player2
-						while(score == 0 || life  == 0 || keyboard.equals("")) {
-							keyboard = inputB.readLine();
-							life = inputB.readInt();
-							score = inputB.readInt();
-						}
-						// send to player1
-						outputA.writeUTF(keyboard);
-						outputA.writeInt(life);
-						outputA.writeInt(score);
-
-						round++;
-					}
-					if(round == 4){
-						inPlaySection = false;
-					}
-
 				}
-
-				stateGame = true;
+				Winner.add(tmp);
 				// The end of try catch block
 			} catch (Exception error) {
 				System.out.println(error);
